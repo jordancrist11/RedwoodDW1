@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionDocuments", "SolutionDocuments", "{39745CDA-4C6A-4CE4-8F8C-6D00E7F4FAC2}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\Desktop\DimDate.sql = ..\..\..\..\Desktop\DimDate.sql
+		..\..\..\..\Desktop\DateDim.sql = ..\..\..\..\Desktop\DateDim.sql
 	EndProjectSection
 EndProject
 Global
