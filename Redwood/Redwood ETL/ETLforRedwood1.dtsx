@@ -5,14 +5,14 @@
   DTS:CreationName="Microsoft.Package"
   DTS:CreatorComputerName="DESKTOP-BGTNBJ6"
   DTS:CreatorName="DESKTOP-BGTNBJ6\coolj"
-  DTS:DTSID="{9CA6792F-7903-4846-8661-8B956DF41B08}"
+  DTS:DTSID="{33B697DC-CA84-462D-B0DF-41CC84F460B6}"
   DTS:ExecutableType="Microsoft.Package"
   DTS:LastModifiedProductVersion="14.0.0800.90"
   DTS:LocaleID="1033"
-  DTS:ObjectName="ETLforRedwood"
+  DTS:ObjectName="ETLforRedwood1"
   DTS:PackageType="5"
-  DTS:VersionBuild="1"
-  DTS:VersionGUID="{026E626B-52ED-41ED-AEB8-3E26D2707E40}">
+  DTS:VersionBuild="2"
+  DTS:VersionGUID="{E0A8C98B-100C-460F-8738-8A789AE728E5}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />
