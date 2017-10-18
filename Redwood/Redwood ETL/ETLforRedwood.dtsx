@@ -7,12 +7,12 @@
   DTS:CreatorName="LAPTOP-4OVHTF04\MadelineMann"
   DTS:DTSID="{ABFD8025-A763-482C-B944-144A68820E57}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="14.0.0500.272"
+  DTS:LastModifiedProductVersion="14.0.0800.90"
   DTS:LocaleID="1033"
   DTS:ObjectName="ETLforRedwood"
   DTS:PackageType="5"
-  DTS:VersionBuild="22"
-  DTS:VersionGUID="{CF76BCA8-52FF-48BD-B6E4-14B76D8CFD03}">
+  DTS:VersionBuild="23"
+  DTS:VersionGUID="{70861419-2D33-4759-AB5A-2B39EF819110}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -49,23 +49,6 @@
       DTS:ObjectName="Load Dim Tables">
       <DTS:Variables />
       <DTS:Executables>
-        <DTS:Executable
-          DTS:refId="Package\Load Dim Tables\Load Dim Date"
-          DTS:CreationName="Microsoft.ExecuteSQLTask"
-          DTS:Description="Execute SQL Task"
-          DTS:DTSID="{FFB21234-812C-4EFE-98EB-A74B7DC307F8}"
-          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-          DTS:LocaleID="-1"
-          DTS:ObjectName="Load Dim Date"
-          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server vNext CTP2.0; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
-          <DTS:Variables />
-          <DTS:ObjectData>
-            <SQLTask:SqlTaskData
-              SQLTask:Connection="{6588D82C-9734-4BC0-AE69-DA2C35C9F73B}"
-              SQLTask:SqlStatementSource="USE DWAgentSales&#xA;&#xA;-- Specify start date and end date here&#xA;-- Value of start date must be less than your end date &#xA;&#xA;DECLARE @StartDate DATETIME = '01/01/2010' -- Starting value of date range&#xA;DECLARE @EndDate DATETIME = '9/19/2017' -- End Value of date range&#xA;&#xA;-- Temporary variables to hold the values during processing of each date of year&#xA;DECLARE&#xA;&#x9;@DayOfWeekInMonth INT,&#xA;&#x9;@DayOfWeekInYear INT,&#xA;&#x9;@DayOfQuarter INT,&#xA;&#x9;@WeekOfMonth INT,&#xA;&#x9;@CurrentYear INT,&#xA;&#x9;@CurrentMonth INT,&#xA;&#x9;@CurrentQuarter INT&#xA;&#xA;-- Table data type to store the day of week count for the month and year&#xA;DECLARE @DayOfWeek TABLE (DOW INT, MonthCount INT, QuarterCount INT, YearCount INT)&#xA;&#xA;INSERT INTO @DayOfWeek VALUES (1, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (2, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (3, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (4, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (5, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (6, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (7, 0, 0, 0)&#xA;&#xA;-- Extract and assign various parts of values from current date to variable&#xA;&#xA;DECLARE @CurrentDate AS DATETIME = @StartDate&#xA;SET @CurrentMonth = DATEPART(MM, @CurrentDate)&#xA;SET @CurrentYear = DATEPART(YY, @CurrentDate)&#xA;SET @CurrentQuarter = DATEPART(QQ, @CurrentDate)&#xA;&#xA;-- Proceed only if start date(current date ) is less than end date you specified above&#xA;&#xA;WHILE @CurrentDate &lt; @EndDate&#xA;BEGIN&#xA; &#xA;-- Begin day of week logic&#xA;&#xA;&#x9;/*Check for change in month of the current date if month changed then change variable value*/&#xA;&#x9;IF @CurrentMonth &lt;&gt; DATEPART(MM, @CurrentDate) &#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET MonthCount = 0&#xA;&#x9;&#x9;SET @CurrentMonth = DATEPART(MM, @CurrentDate)&#xA;&#x9;END&#xA;&#xA;&#x9;/* Check for change in quarter of the current date if quarter changed then change variable value*/&#xA;&#xA;&#x9;IF @CurrentQuarter &lt;&gt; DATEPART(QQ, @CurrentDate)&#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET QuarterCount = 0&#xA;&#x9;&#x9;SET @CurrentQuarter = DATEPART(QQ, @CurrentDate)&#xA;&#x9;END&#xA;       &#xA;&#x9;/* Check for Change in Year of the Current date if Year changed then change variable value*/&#xA;&#x9;&#xA;&#x9;IF @CurrentYear &lt;&gt; DATEPART(YY, @CurrentDate)&#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET YearCount = 0&#xA;&#x9;&#x9;SET @CurrentYear = DATEPART(YY, @CurrentDate)&#xA;&#x9;END&#xA;&#x9;&#xA;-- Set values in table data type created above from variables &#xA;&#xA;&#x9;UPDATE @DayOfWeek&#xA;&#x9;SET &#xA;&#x9;&#x9;MonthCount = MonthCount + 1,&#xA;&#x9;&#x9;QuarterCount = QuarterCount + 1,&#xA;&#x9;&#x9;YearCount = YearCount + 1&#xA;&#x9;WHERE DOW = DATEPART(DW, @CurrentDate)&#xA;&#xA;&#x9;SELECT&#xA;&#x9;&#x9;@DayOfWeekInMonth = MonthCount,&#xA;&#x9;&#x9;@DayOfQuarter = QuarterCount,&#xA;&#x9;&#x9;@DayOfWeekInYear = YearCount&#xA;&#x9;FROM @DayOfWeek&#xA;&#x9;WHERE DOW = DATEPART(DW, @CurrentDate)&#xA;&#x9;&#xA;-- End day of week logic&#xA;&#xA;&#x9;/* Populate your dimension table with values*/&#xA;&#x9;&#xA;&#x9;INSERT INTO [dbo].[DimDate]&#xA;&#x9;SELECT&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;CONVERT (char(8),@CurrentDate,112) AS Date_SK,&#xA;&#x9;&#x9;@CurrentDate AS Date,&#xA;&#x9;&#x9;CONVERT (char(10),@CurrentDate,101) AS FullDate,&#xA;&#x9;&#x9;DATEPART(DD, @CurrentDate) AS DayOfMonth,&#xA;&#x9;&#x9;DATENAME(DW, @CurrentDate) AS DayName,&#xA;&#x9;&#x9;DATEPART(DW, @CurrentDate) AS DayOfWeek,&#xA;&#x9;&#x9;@DayOfWeekInMonth AS DayOfWeekInMonth,&#xA;&#x9;&#x9;@DayOfWeekInYear AS DayOfWeekInYear,&#xA;&#x9;&#x9;@DayOfQuarter AS DayOfQuarter,&#xA;&#x9;&#x9;DATEPART(DY, @CurrentDate) AS DayOfYear,&#xA;&#x9;&#x9;DATEPART(WW, @CurrentDate) + 1 - DATEPART(WW, CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(MM, @CurrentDate)) + '/1/' + CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(YY, @CurrentDate))) AS WeekOfMonth,&#xA;&#x9;&#x9;(DATEDIFF(DD, DATEADD(QQ, DATEDIFF(QQ, 0, @CurrentDate), 0), &#xA;&#x9;&#x9;@CurrentDate) / 7) + 1 AS WeekOfQuarter,&#xA;&#x9;&#x9;DATEPART(WW, @CurrentDate) AS WeekOfYear,&#xA;&#x9;&#x9;DATEPART(MM, @CurrentDate) AS Month,&#xA;&#x9;&#x9;DATENAME(MM, @CurrentDate) AS MonthName,&#xA;&#x9;&#x9;CASE&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (1, 4, 7, 10) THEN 1&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (2, 5, 8, 11) THEN 2&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (3, 6, 9, 12) THEN 3&#xA;&#x9;&#x9;&#x9;END AS MonthOfQuarter,&#xA;&#x9;&#x9;'Q' + CONVERT(VARCHAR, DATEPART(QQ, @CurrentDate)) AS Quarter,&#xA;&#x9;&#x9;CASE DATEPART(QQ, @CurrentDate)&#xA;&#x9;&#x9;&#x9;WHEN 1 THEN 'First'&#xA;&#x9;&#x9;&#x9;WHEN 2 THEN 'Second'&#xA;&#x9;&#x9;&#x9;WHEN 3 THEN 'Third'&#xA;&#x9;&#x9;&#x9;WHEN 4 THEN 'Fourth'&#xA;&#x9;&#x9;&#x9;END AS QuarterName,&#xA;&#x9;&#x9;DATEPART(YEAR, @CurrentDate) AS Year,&#xA;&#x9;&#x9;'CY ' + CONVERT(VARCHAR, DATEPART(YEAR, @CurrentDate)) AS YearName,&#xA;&#x9;&#x9;LEFT(DATENAME(MM, @CurrentDate), 3) + '-' + CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(YY, @CurrentDate)) AS MonthYear,&#xA;&#x9;&#x9;RIGHT('0' + CONVERT(VARCHAR, DATEPART(MM, @CurrentDate)),2) + &#xA;&#x9;&#x9;CONVERT(VARCHAR, DATEPART(YY, @CurrentDate)) AS MMYYYY,&#xA;&#x9;&#x9;CONVERT(DATETIME, CONVERT(DATE, DATEADD(DD, - (DATEPART(DD, &#xA;&#x9;&#x9;@CurrentDate) - 1), @CurrentDate))) AS FirstDayOfMonth,&#xA;&#x9;&#x9;CONVERT(DATETIME, CONVERT(DATE, DATEADD(DD, - (DATEPART(DD, &#xA;&#x9;&#x9;(DATEADD(MM, 1, @CurrentDate)))), DATEADD(MM, 1, &#xA;&#x9;&#x9;@CurrentDate)))) AS LastDayOfMonth,&#xA;&#x9;&#x9;DATEADD(QQ, DATEDIFF(QQ, 0, @CurrentDate), 0) AS FirstDayOfQuarter,&#xA;&#x9;&#x9;DATEADD(QQ, DATEDIFF(QQ, -1, @CurrentDate), -1) AS LastDayOfQuarter,&#xA;&#x9;&#x9;CONVERT(DATETIME, '01/01/' + CONVERT(VARCHAR, DATEPART(YY, &#xA;&#x9;&#x9;@CurrentDate))) AS FirstDayOfYear,&#xA;&#x9;&#x9;CONVERT(DATETIME, '12/31/' + CONVERT(VARCHAR, DATEPART(YY, &#xA;&#x9;&#x9;@CurrentDate))) AS LastDayOfYear,&#xA;&#x9;&#x9;NULL AS IsHoliday,&#xA;&#x9;&#x9;CASE DATEPART(DW, @CurrentDate)&#xA;&#x9;&#x9;&#x9;WHEN 1 THEN 0&#xA;&#x9;&#x9;&#x9;WHEN 2 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 3 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 4 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 5 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 6 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 7 THEN 0&#xA;&#x9;&#x9;&#x9;END AS IsWeekday,&#xA;&#x9;&#x9;NULL AS Holiday,&#xA;&#x9;&#x9; CASE&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (12,1,2) THEN 'Winter'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (3,4,5) THEN 'Spring'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (6,7,8) THEN 'Summer'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (9,10,11) THEN 'Fall'&#xA;&#x9;&#x9;&#x9;END AS Season&#xA;&#xA;&#x9;SET @CurrentDate = DATEADD(DD, 1, @CurrentDate)&#xA;END&#xA;&#xA;--Update values of holiday as per USA Govt. Declaration for National Holiday&#xA;&#xA;&#x9;-- THANKSGIVING - Fourth THURSDAY in November&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Thanksgiving Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 11 &#xA;&#x9;&#x9;AND [DayName] = 'Thursday' &#xA;&#x9;&#x9;AND DayOfWeekInMonth = 4&#xA;&#xA;&#x9;-- CHRISTMAS&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Christmas Day'&#xA;&#x9;&#x9;&#xA;&#x9;WHERE [Month] = 12 AND [DayOfMonth]  = 25&#xA;&#xA;&#x9;-- 4th of July&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Independance Day'&#xA;&#x9;WHERE [Month] = 7 AND [DayOfMonth] = 4&#xA;&#xA;&#x9;-- New Years Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'New Year''s Day'&#xA;&#x9;WHERE [Month] = 1 AND [DayOfMonth] = 1&#xA;&#xA;&#x9;-- Memorial Day - Last Monday in May&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Memorial Day'&#xA;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;WHERE Date_SK IN &#xA;&#x9;&#x9;(&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;MAX(Date_SK)&#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[MonthName] = 'May'&#xA;&#x9;&#x9;&#x9;AND [DayName]  = 'Monday'&#xA;&#x9;&#x9;GROUP BY&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[Month]&#xA;&#x9;&#x9;)&#xA;&#xA;&#x9;-- Labor Day - First Monday in September&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Labor Day'&#xA;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;WHERE Date_SK IN &#xA;&#x9;&#x9;(&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;MIN(Date_SK)&#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[MonthName] = 'September'&#xA;&#x9;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;GROUP BY&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[Month]&#xA;&#x9;&#x9;)&#xA;&#xA;&#x9;-- Valentine's Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Valentine''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 2 &#xA;&#x9;&#x9;AND [DayOfMonth] = 14&#xA;&#xA;&#x9;-- Saint Patrick's Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Saint Patrick''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 3&#xA;&#x9;&#x9;AND [DayOfMonth] = 17&#xA;&#xA;&#x9;-- Martin Luthor King Day - Third Monday in January starting in 1983&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Martin Luthor King Jr Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 1&#xA;&#x9;&#x9;AND [DayName]  = 'Monday'&#xA;&#x9;&#x9;AND [Year] &gt;= 1983&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- President's Day - Third Monday in February&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'President''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 2&#xA;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- Mother's Day - Second Sunday of May&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Mother''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 5&#xA;&#x9;&#x9;AND [DayName] = 'Sunday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 2&#xA;&#xA;&#x9;-- Father's Day - Third Sunday of June&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Father''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 6&#xA;&#x9;&#x9;AND [DayName] = 'Sunday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- Halloween 10/31*/&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Halloween'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 10&#xA;&#x9;&#x9;AND [DayOfMonth] = 31&#xA;&#xA;&#x9;-- Election Day - The first Tuesday after the first Monday in November&#xA;&#x9;BEGIN&#xA;&#x9;DECLARE @Holidays TABLE (ID INT IDENTITY(1,1), &#xA;&#x9;DateID int, Week TINYINT, YEAR CHAR(4), DAY CHAR(2))&#xA;&#xA;&#x9;&#x9;INSERT INTO @Holidays(DateID, [Year],[Day])&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;Date_SK,&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[DayOfMonth] &#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[Month] = 11&#xA;&#x9;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;ORDER BY&#xA;&#x9;&#x9;&#x9;YEAR,&#xA;&#x9;&#x9;&#x9;DayOfMonth &#xA;&#xA;&#x9;&#x9;DECLARE @CNTR INT, @POS INT, @STARTYEAR INT, @ENDYEAR INT, @MINDAY INT&#xA;&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;@CURRENTYEAR = MIN([Year]),&#xA;&#x9;&#x9;&#x9;@STARTYEAR = MIN([Year]),&#xA;&#x9;&#x9;&#x9;@ENDYEAR = MAX([Year])&#xA;&#x9;&#x9;FROM @Holidays&#xA;&#xA;&#x9;&#x9;WHILE @CURRENTYEAR &lt;= @ENDYEAR&#xA;&#x9;&#x9;BEGIN&#xA;&#x9;&#x9;&#x9;SELECT @CNTR = COUNT([Year])&#xA;&#x9;&#x9;&#x9;FROM @Holidays&#xA;&#x9;&#x9;&#x9;WHERE [Year] = @CURRENTYEAR&#xA;&#xA;&#x9;&#x9;&#x9;SET @POS = 1&#xA;&#xA;&#x9;&#x9;&#x9;WHILE @POS &lt;= @CNTR&#xA;&#x9;&#x9;&#x9;BEGIN&#xA;&#x9;&#x9;&#x9;&#x9;SELECT @MINDAY = MIN(DAY)&#xA;&#x9;&#x9;&#x9;&#x9;FROM @Holidays&#xA;&#x9;&#x9;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;[Year] = @CURRENTYEAR&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;AND [Week] IS NULL&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;UPDATE @Holidays&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET [Week] = @POS&#xA;&#x9;&#x9;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;[Year] = @CURRENTYEAR&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;AND [Day] = @MINDAY&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;SELECT @POS = @POS + 1&#xA;&#x9;&#x9;&#x9;END&#xA;&#xA;&#x9;&#x9;&#x9;SELECT @CURRENTYEAR = @CURRENTYEAR + 1&#xA;&#x9;&#x9;END&#xA;&#xA;&#x9;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;&#x9;SET Holiday  = 'Election Day'&#x9;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;FROM [dbo].[DimDate] DT&#xA;&#x9;&#x9;&#x9;JOIN @Holidays HL ON (HL.DateID + 1) = DT.Date_SK&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[Week] = 1&#xA;&#x9;END&#xA;&#x9;-- Set flag for USA holidays in Dimension&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;SET IsHoliday = &#xA;&#x9;&#x9;CASE&#x9;WHEN Holiday IS NULL THEN 0 &#xA;&#x9;&#x9;&#x9;WHEN Holiday IS NOT NULL THEN 1 &#xA;&#x9;END&#xA;&#xA;/*****************************************************************************************/&#xA;&#xA;SELECT * FROM [dbo].[DimDate]&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-          </DTS:ObjectData>
-        </DTS:Executable>
         <DTS:Executable
           DTS:refId="Package\Load Dim Tables\Load DimAgent"
           DTS:CreationName="Microsoft.Pipeline"
@@ -778,6 +761,23 @@ FROM            Customer</property>
                   startId="Package\Load Dim Tables\Load DimCustomer\OLE DB Source.Outputs[OLE DB Source Output]" />
               </paths>
             </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Load Dim Tables\Load DimDate"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{FFB21234-812C-4EFE-98EB-A74B7DC307F8}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimDate"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server vNext CTP2.0; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{6588D82C-9734-4BC0-AE69-DA2C35C9F73B}"
+              SQLTask:SqlStatementSource="USE DWAgentSales&#xA;&#xA;-- Specify start date and end date here&#xA;-- Value of start date must be less than your end date &#xA;&#xA;DECLARE @StartDate DATETIME = '01/01/2010' -- Starting value of date range&#xA;DECLARE @EndDate DATETIME = '9/19/2017' -- End Value of date range&#xA;&#xA;-- Temporary variables to hold the values during processing of each date of year&#xA;DECLARE&#xA;&#x9;@DayOfWeekInMonth INT,&#xA;&#x9;@DayOfWeekInYear INT,&#xA;&#x9;@DayOfQuarter INT,&#xA;&#x9;@WeekOfMonth INT,&#xA;&#x9;@CurrentYear INT,&#xA;&#x9;@CurrentMonth INT,&#xA;&#x9;@CurrentQuarter INT&#xA;&#xA;-- Table data type to store the day of week count for the month and year&#xA;DECLARE @DayOfWeek TABLE (DOW INT, MonthCount INT, QuarterCount INT, YearCount INT)&#xA;&#xA;INSERT INTO @DayOfWeek VALUES (1, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (2, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (3, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (4, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (5, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (6, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (7, 0, 0, 0)&#xA;&#xA;-- Extract and assign various parts of values from current date to variable&#xA;&#xA;DECLARE @CurrentDate AS DATETIME = @StartDate&#xA;SET @CurrentMonth = DATEPART(MM, @CurrentDate)&#xA;SET @CurrentYear = DATEPART(YY, @CurrentDate)&#xA;SET @CurrentQuarter = DATEPART(QQ, @CurrentDate)&#xA;&#xA;-- Proceed only if start date(current date ) is less than end date you specified above&#xA;&#xA;WHILE @CurrentDate &lt; @EndDate&#xA;BEGIN&#xA; &#xA;-- Begin day of week logic&#xA;&#xA;&#x9;/*Check for change in month of the current date if month changed then change variable value*/&#xA;&#x9;IF @CurrentMonth &lt;&gt; DATEPART(MM, @CurrentDate) &#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET MonthCount = 0&#xA;&#x9;&#x9;SET @CurrentMonth = DATEPART(MM, @CurrentDate)&#xA;&#x9;END&#xA;&#xA;&#x9;/* Check for change in quarter of the current date if quarter changed then change variable value*/&#xA;&#xA;&#x9;IF @CurrentQuarter &lt;&gt; DATEPART(QQ, @CurrentDate)&#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET QuarterCount = 0&#xA;&#x9;&#x9;SET @CurrentQuarter = DATEPART(QQ, @CurrentDate)&#xA;&#x9;END&#xA;       &#xA;&#x9;/* Check for Change in Year of the Current date if Year changed then change variable value*/&#xA;&#x9;&#xA;&#x9;IF @CurrentYear &lt;&gt; DATEPART(YY, @CurrentDate)&#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET YearCount = 0&#xA;&#x9;&#x9;SET @CurrentYear = DATEPART(YY, @CurrentDate)&#xA;&#x9;END&#xA;&#x9;&#xA;-- Set values in table data type created above from variables &#xA;&#xA;&#x9;UPDATE @DayOfWeek&#xA;&#x9;SET &#xA;&#x9;&#x9;MonthCount = MonthCount + 1,&#xA;&#x9;&#x9;QuarterCount = QuarterCount + 1,&#xA;&#x9;&#x9;YearCount = YearCount + 1&#xA;&#x9;WHERE DOW = DATEPART(DW, @CurrentDate)&#xA;&#xA;&#x9;SELECT&#xA;&#x9;&#x9;@DayOfWeekInMonth = MonthCount,&#xA;&#x9;&#x9;@DayOfQuarter = QuarterCount,&#xA;&#x9;&#x9;@DayOfWeekInYear = YearCount&#xA;&#x9;FROM @DayOfWeek&#xA;&#x9;WHERE DOW = DATEPART(DW, @CurrentDate)&#xA;&#x9;&#xA;-- End day of week logic&#xA;&#xA;&#x9;/* Populate your dimension table with values*/&#xA;&#x9;&#xA;&#x9;INSERT INTO [dbo].[DimDate]&#xA;&#x9;SELECT&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;CONVERT (char(8),@CurrentDate,112) AS Date_SK,&#xA;&#x9;&#x9;@CurrentDate AS Date,&#xA;&#x9;&#x9;CONVERT (char(10),@CurrentDate,101) AS FullDate,&#xA;&#x9;&#x9;DATEPART(DD, @CurrentDate) AS DayOfMonth,&#xA;&#x9;&#x9;DATENAME(DW, @CurrentDate) AS DayName,&#xA;&#x9;&#x9;DATEPART(DW, @CurrentDate) AS DayOfWeek,&#xA;&#x9;&#x9;@DayOfWeekInMonth AS DayOfWeekInMonth,&#xA;&#x9;&#x9;@DayOfWeekInYear AS DayOfWeekInYear,&#xA;&#x9;&#x9;@DayOfQuarter AS DayOfQuarter,&#xA;&#x9;&#x9;DATEPART(DY, @CurrentDate) AS DayOfYear,&#xA;&#x9;&#x9;DATEPART(WW, @CurrentDate) + 1 - DATEPART(WW, CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(MM, @CurrentDate)) + '/1/' + CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(YY, @CurrentDate))) AS WeekOfMonth,&#xA;&#x9;&#x9;(DATEDIFF(DD, DATEADD(QQ, DATEDIFF(QQ, 0, @CurrentDate), 0), &#xA;&#x9;&#x9;@CurrentDate) / 7) + 1 AS WeekOfQuarter,&#xA;&#x9;&#x9;DATEPART(WW, @CurrentDate) AS WeekOfYear,&#xA;&#x9;&#x9;DATEPART(MM, @CurrentDate) AS Month,&#xA;&#x9;&#x9;DATENAME(MM, @CurrentDate) AS MonthName,&#xA;&#x9;&#x9;CASE&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (1, 4, 7, 10) THEN 1&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (2, 5, 8, 11) THEN 2&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (3, 6, 9, 12) THEN 3&#xA;&#x9;&#x9;&#x9;END AS MonthOfQuarter,&#xA;&#x9;&#x9;'Q' + CONVERT(VARCHAR, DATEPART(QQ, @CurrentDate)) AS Quarter,&#xA;&#x9;&#x9;CASE DATEPART(QQ, @CurrentDate)&#xA;&#x9;&#x9;&#x9;WHEN 1 THEN 'First'&#xA;&#x9;&#x9;&#x9;WHEN 2 THEN 'Second'&#xA;&#x9;&#x9;&#x9;WHEN 3 THEN 'Third'&#xA;&#x9;&#x9;&#x9;WHEN 4 THEN 'Fourth'&#xA;&#x9;&#x9;&#x9;END AS QuarterName,&#xA;&#x9;&#x9;DATEPART(YEAR, @CurrentDate) AS Year,&#xA;&#x9;&#x9;'CY ' + CONVERT(VARCHAR, DATEPART(YEAR, @CurrentDate)) AS YearName,&#xA;&#x9;&#x9;LEFT(DATENAME(MM, @CurrentDate), 3) + '-' + CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(YY, @CurrentDate)) AS MonthYear,&#xA;&#x9;&#x9;RIGHT('0' + CONVERT(VARCHAR, DATEPART(MM, @CurrentDate)),2) + &#xA;&#x9;&#x9;CONVERT(VARCHAR, DATEPART(YY, @CurrentDate)) AS MMYYYY,&#xA;&#x9;&#x9;CONVERT(DATETIME, CONVERT(DATE, DATEADD(DD, - (DATEPART(DD, &#xA;&#x9;&#x9;@CurrentDate) - 1), @CurrentDate))) AS FirstDayOfMonth,&#xA;&#x9;&#x9;CONVERT(DATETIME, CONVERT(DATE, DATEADD(DD, - (DATEPART(DD, &#xA;&#x9;&#x9;(DATEADD(MM, 1, @CurrentDate)))), DATEADD(MM, 1, &#xA;&#x9;&#x9;@CurrentDate)))) AS LastDayOfMonth,&#xA;&#x9;&#x9;DATEADD(QQ, DATEDIFF(QQ, 0, @CurrentDate), 0) AS FirstDayOfQuarter,&#xA;&#x9;&#x9;DATEADD(QQ, DATEDIFF(QQ, -1, @CurrentDate), -1) AS LastDayOfQuarter,&#xA;&#x9;&#x9;CONVERT(DATETIME, '01/01/' + CONVERT(VARCHAR, DATEPART(YY, &#xA;&#x9;&#x9;@CurrentDate))) AS FirstDayOfYear,&#xA;&#x9;&#x9;CONVERT(DATETIME, '12/31/' + CONVERT(VARCHAR, DATEPART(YY, &#xA;&#x9;&#x9;@CurrentDate))) AS LastDayOfYear,&#xA;&#x9;&#x9;NULL AS IsHoliday,&#xA;&#x9;&#x9;CASE DATEPART(DW, @CurrentDate)&#xA;&#x9;&#x9;&#x9;WHEN 1 THEN 0&#xA;&#x9;&#x9;&#x9;WHEN 2 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 3 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 4 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 5 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 6 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 7 THEN 0&#xA;&#x9;&#x9;&#x9;END AS IsWeekday,&#xA;&#x9;&#x9;NULL AS Holiday,&#xA;&#x9;&#x9; CASE&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (12,1,2) THEN 'Winter'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (3,4,5) THEN 'Spring'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (6,7,8) THEN 'Summer'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (9,10,11) THEN 'Fall'&#xA;&#x9;&#x9;&#x9;END AS Season&#xA;&#xA;&#x9;SET @CurrentDate = DATEADD(DD, 1, @CurrentDate)&#xA;END&#xA;&#xA;--Update values of holiday as per USA Govt. Declaration for National Holiday&#xA;&#xA;&#x9;-- THANKSGIVING - Fourth THURSDAY in November&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Thanksgiving Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 11 &#xA;&#x9;&#x9;AND [DayName] = 'Thursday' &#xA;&#x9;&#x9;AND DayOfWeekInMonth = 4&#xA;&#xA;&#x9;-- CHRISTMAS&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Christmas Day'&#xA;&#x9;&#x9;&#xA;&#x9;WHERE [Month] = 12 AND [DayOfMonth]  = 25&#xA;&#xA;&#x9;-- 4th of July&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Independance Day'&#xA;&#x9;WHERE [Month] = 7 AND [DayOfMonth] = 4&#xA;&#xA;&#x9;-- New Years Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'New Year''s Day'&#xA;&#x9;WHERE [Month] = 1 AND [DayOfMonth] = 1&#xA;&#xA;&#x9;-- Memorial Day - Last Monday in May&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Memorial Day'&#xA;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;WHERE Date_SK IN &#xA;&#x9;&#x9;(&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;MAX(Date_SK)&#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[MonthName] = 'May'&#xA;&#x9;&#x9;&#x9;AND [DayName]  = 'Monday'&#xA;&#x9;&#x9;GROUP BY&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[Month]&#xA;&#x9;&#x9;)&#xA;&#xA;&#x9;-- Labor Day - First Monday in September&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Labor Day'&#xA;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;WHERE Date_SK IN &#xA;&#x9;&#x9;(&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;MIN(Date_SK)&#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[MonthName] = 'September'&#xA;&#x9;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;GROUP BY&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[Month]&#xA;&#x9;&#x9;)&#xA;&#xA;&#x9;-- Valentine's Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Valentine''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 2 &#xA;&#x9;&#x9;AND [DayOfMonth] = 14&#xA;&#xA;&#x9;-- Saint Patrick's Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Saint Patrick''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 3&#xA;&#x9;&#x9;AND [DayOfMonth] = 17&#xA;&#xA;&#x9;-- Martin Luthor King Day - Third Monday in January starting in 1983&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Martin Luthor King Jr Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 1&#xA;&#x9;&#x9;AND [DayName]  = 'Monday'&#xA;&#x9;&#x9;AND [Year] &gt;= 1983&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- President's Day - Third Monday in February&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'President''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 2&#xA;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- Mother's Day - Second Sunday of May&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Mother''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 5&#xA;&#x9;&#x9;AND [DayName] = 'Sunday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 2&#xA;&#xA;&#x9;-- Father's Day - Third Sunday of June&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Father''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 6&#xA;&#x9;&#x9;AND [DayName] = 'Sunday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- Halloween 10/31*/&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Halloween'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 10&#xA;&#x9;&#x9;AND [DayOfMonth] = 31&#xA;&#xA;&#x9;-- Election Day - The first Tuesday after the first Monday in November&#xA;&#x9;BEGIN&#xA;&#x9;DECLARE @Holidays TABLE (ID INT IDENTITY(1,1), &#xA;&#x9;DateID int, Week TINYINT, YEAR CHAR(4), DAY CHAR(2))&#xA;&#xA;&#x9;&#x9;INSERT INTO @Holidays(DateID, [Year],[Day])&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;Date_SK,&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[DayOfMonth] &#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[Month] = 11&#xA;&#x9;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;ORDER BY&#xA;&#x9;&#x9;&#x9;YEAR,&#xA;&#x9;&#x9;&#x9;DayOfMonth &#xA;&#xA;&#x9;&#x9;DECLARE @CNTR INT, @POS INT, @STARTYEAR INT, @ENDYEAR INT, @MINDAY INT&#xA;&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;@CURRENTYEAR = MIN([Year]),&#xA;&#x9;&#x9;&#x9;@STARTYEAR = MIN([Year]),&#xA;&#x9;&#x9;&#x9;@ENDYEAR = MAX([Year])&#xA;&#x9;&#x9;FROM @Holidays&#xA;&#xA;&#x9;&#x9;WHILE @CURRENTYEAR &lt;= @ENDYEAR&#xA;&#x9;&#x9;BEGIN&#xA;&#x9;&#x9;&#x9;SELECT @CNTR = COUNT([Year])&#xA;&#x9;&#x9;&#x9;FROM @Holidays&#xA;&#x9;&#x9;&#x9;WHERE [Year] = @CURRENTYEAR&#xA;&#xA;&#x9;&#x9;&#x9;SET @POS = 1&#xA;&#xA;&#x9;&#x9;&#x9;WHILE @POS &lt;= @CNTR&#xA;&#x9;&#x9;&#x9;BEGIN&#xA;&#x9;&#x9;&#x9;&#x9;SELECT @MINDAY = MIN(DAY)&#xA;&#x9;&#x9;&#x9;&#x9;FROM @Holidays&#xA;&#x9;&#x9;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;[Year] = @CURRENTYEAR&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;AND [Week] IS NULL&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;UPDATE @Holidays&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET [Week] = @POS&#xA;&#x9;&#x9;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;[Year] = @CURRENTYEAR&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;AND [Day] = @MINDAY&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;SELECT @POS = @POS + 1&#xA;&#x9;&#x9;&#x9;END&#xA;&#xA;&#x9;&#x9;&#x9;SELECT @CURRENTYEAR = @CURRENTYEAR + 1&#xA;&#x9;&#x9;END&#xA;&#xA;&#x9;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;&#x9;SET Holiday  = 'Election Day'&#x9;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;FROM [dbo].[DimDate] DT&#xA;&#x9;&#x9;&#x9;JOIN @Holidays HL ON (HL.DateID + 1) = DT.Date_SK&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[Week] = 1&#xA;&#x9;END&#xA;&#x9;-- Set flag for USA holidays in Dimension&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;SET IsHoliday = &#xA;&#x9;&#x9;CASE&#x9;WHEN Holiday IS NULL THEN 0 &#xA;&#x9;&#x9;&#x9;WHEN Holiday IS NOT NULL THEN 1 &#xA;&#x9;END&#xA;&#xA;/*****************************************************************************************/&#xA;&#xA;SELECT * FROM [dbo].[DimDate]&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
@@ -1632,7 +1632,7 @@ FROM            Property</property>
           DTS:refId="Package\Load Dim Tables.PrecedenceConstraints[Constraint]"
           DTS:CreationName=""
           DTS:DTSID="{9B1A13A4-F0FE-40E8-863C-10D695DB5F24}"
-          DTS:From="Package\Load Dim Tables\Load Dim Date"
+          DTS:From="Package\Load Dim Tables\Load DimDate"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint"
           DTS:To="Package\Load Dim Tables\Load DimListing" />
@@ -1671,7 +1671,23 @@ FROM            Property</property>
       DTS:LocaleID="-1"
       DTS:ObjectName="Load Fact Table">
       <DTS:Variables />
-      <DTS:Executables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Load Fact Table\Load FactAgentSales"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{7C42A6AA-143B-432C-AE38-434D172B48AD}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load FactAgentSales"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
     </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Prepare ETL"
@@ -1712,6 +1728,14 @@ FROM            Property</property>
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
       DTS:To="Package\Load Dim Tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{4B76B3DB-7EE5-488D-9818-849BC9DC4451}"
+      DTS:From="Package\Load Dim Tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Load Fact Table" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -1726,11 +1750,11 @@ FROM            Property</property>
       <GraphLayout
         Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="149,42"
-          Id="Package\Load Dim Tables\Load Dim Date"
+          Size="144.8,41.6"
+          Id="Package\Load Dim Tables\Load DimDate"
           TopLeft="38,14" />
         <NodeLayout
-          Size="151,42"
+          Size="151.2,42"
           Id="Package\Load Dim Tables\Load DimAgent"
           TopLeft="39,247" />
         <NodeLayout
@@ -1742,30 +1766,30 @@ FROM            Property</property>
           Id="Package\Load Dim Tables\Load DimListing"
           TopLeft="37,106" />
         <NodeLayout
-          Size="163,42"
+          Size="163.2,42"
           Id="Package\Load Dim Tables\Load DimProperty"
           TopLeft="40,323" />
         <EdgeLayout
           Id="Package\Load Dim Tables.PrecedenceConstraints[Constraint]"
-          TopLeft="113.25,56">
+          TopLeft="112.2,55.6">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,50"
+              EndConnector="0,50.4"
               Start="0,0"
-              End="0,42.5">
+              End="0,42.9">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,42.5" />
+                    End="0,42.9" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-17.9932421875,16.47314453125,35.986484375,9.5537109375"
+              BoundingBox="-17.9932421875,16.67314453125,35.986484375,9.5537109375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -1844,26 +1868,30 @@ FROM            Property</property>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="245,415"
-          Size="245,458"
+          PanelSize="244.8,415.2"
+          Size="244.8,458.4"
           Id="Package\Load Dim Tables"
           TopLeft="67,298" />
+        <NodeLayout
+          Size="176,41.6"
+          Id="Package\Load Fact Table\Load FactAgentSales"
+          TopLeft="37.1384817687724,23.3818402962916" />
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="205,55"
-          Size="205,98"
+          PanelSize="233.6,119.2"
+          Size="233.6,162.4"
           Id="Package\Load Fact Table"
-          TopLeft="469,130" />
+          TopLeft="473.615384784676,439.636374821676" />
         <NodeLayout
-          Size="121,42"
+          Size="120.8,42"
           Id="Package\Prepare ETL\Build DM"
           TopLeft="31,22" />
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
           PanelSize="186,92"
-          Size="186,135"
+          Size="186,135.2"
           Id="Package\Prepare ETL"
           TopLeft="75,41" />
         <EdgeLayout
@@ -1899,6 +1927,30 @@ FROM            Property</property>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
               BoundingBox="-7.2432421875,66,35.986484375,9.5537109375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="311.8,524.018187410838">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="161.815384784676,0"
+              Start="0,0"
+              End="154.315384784676,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="154.315384784676,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="59.1644502048379,5,35.986484375,9.5537109375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -2062,6 +2114,19 @@ FROM            Property</property>
     </LayoutInfo>
   </TaskHost>
   <PipelineComponentMetadata
+    design-time-name="Package\Load Dim Tables\Load DimListing\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
     design-time-name="Package\Load Dim Tables\Load DimListing\OLE DB Source">
     <Properties>
       <Property>
@@ -2137,19 +2202,6 @@ FROM            Property</property>
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\Load Dim Tables\Load DimListing\OLE DB Destination">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
