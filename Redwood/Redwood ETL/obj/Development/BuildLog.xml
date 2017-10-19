@@ -2,13 +2,13 @@
 <BuildLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ProjectInfo>
     <Name>Redwood ETL</Name>
-    <LastWriteTime>2017-10-18T21:55:42.7612888Z</LastWriteTime>
+    <LastWriteTime>2017-10-19T17:04:23.0584576Z</LastWriteTime>
     <LastKnownProtectionLevel>EncryptSensitiveWithUserKey</LastKnownProtectionLevel>
   </ProjectInfo>
   <LastBuildInfos>
     <ProjectBuildItemInfo>
       <Name>ETLforRedwood.dtsx</Name>
-      <LastWriteTime>2017-10-19T00:29:53.7712892Z</LastWriteTime>
+      <LastWriteTime>2017-10-19T17:02:20.065399Z</LastWriteTime>
       <LastKnownProtectionLevel>EncryptSensitiveWithUserKey</LastKnownProtectionLevel>
     </ProjectBuildItemInfo>
   </LastBuildInfos>
