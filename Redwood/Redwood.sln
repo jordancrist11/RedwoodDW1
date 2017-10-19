@@ -5,8 +5,9 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionDocuments", "SolutionDocuments", "{39745CDA-4C6A-4CE4-8F8C-6D00E7F4FAC2}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\Desktop\DateDim.sql = ..\..\..\..\Desktop\DateDim.sql
-		..\..\..\..\Desktop\School\Academics\INFO 3300\ClassDocs\INFO 3300 Assessments, Assignments and Grading - F17.docx = ..\..\..\..\Desktop\School\Academics\INFO 3300\ClassDocs\INFO 3300 Assessments, Assignments and Grading - F17.docx
+		..\..\..\..\Downloads\BI Solutions.xlsx = ..\..\..\..\Downloads\BI Solutions.xlsx
+		..\..\..\..\Downloads\InformationPackage.docx = ..\..\..\..\Downloads\InformationPackage.docx
+		..\..\..\..\Downloads\Star.vsdm = ..\..\..\..\Downloads\Star.vsdm
 	EndProjectSection
 EndProject
 Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Redwood ETL", "Redwood ETL\Redwood ETL.dtproj", "{185ACC09-EB54-45FB-B67C-349A4A9E3973}"
