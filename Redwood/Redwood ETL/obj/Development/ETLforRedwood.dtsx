@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="ETLforRedwood"
   DTS:PackageType="5"
-  DTS:VersionBuild="22"
-  DTS:VersionGUID="{CF76BCA8-52FF-48BD-B6E4-14B76D8CFD03}">
+  DTS:VersionBuild="39"
+  DTS:VersionGUID="{C6BCFD90-DD97-49DF-B89A-156ED35D10CE}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -49,23 +49,6 @@
       DTS:ObjectName="Load Dim Tables">
       <DTS:Variables />
       <DTS:Executables>
-        <DTS:Executable
-          DTS:refId="Package\Load Dim Tables\Load Dim Date"
-          DTS:CreationName="Microsoft.ExecuteSQLTask"
-          DTS:Description="Execute SQL Task"
-          DTS:DTSID="{FFB21234-812C-4EFE-98EB-A74B7DC307F8}"
-          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-          DTS:LocaleID="-1"
-          DTS:ObjectName="Load Dim Date"
-          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server vNext CTP2.0; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
-          <DTS:Variables />
-          <DTS:ObjectData>
-            <SQLTask:SqlTaskData
-              SQLTask:Connection="{6588D82C-9734-4BC0-AE69-DA2C35C9F73B}"
-              SQLTask:SqlStatementSource="USE DWAgentSales&#xA;&#xA;-- Specify start date and end date here&#xA;-- Value of start date must be less than your end date &#xA;&#xA;DECLARE @StartDate DATETIME = '01/01/2010' -- Starting value of date range&#xA;DECLARE @EndDate DATETIME = '9/19/2017' -- End Value of date range&#xA;&#xA;-- Temporary variables to hold the values during processing of each date of year&#xA;DECLARE&#xA;&#x9;@DayOfWeekInMonth INT,&#xA;&#x9;@DayOfWeekInYear INT,&#xA;&#x9;@DayOfQuarter INT,&#xA;&#x9;@WeekOfMonth INT,&#xA;&#x9;@CurrentYear INT,&#xA;&#x9;@CurrentMonth INT,&#xA;&#x9;@CurrentQuarter INT&#xA;&#xA;-- Table data type to store the day of week count for the month and year&#xA;DECLARE @DayOfWeek TABLE (DOW INT, MonthCount INT, QuarterCount INT, YearCount INT)&#xA;&#xA;INSERT INTO @DayOfWeek VALUES (1, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (2, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (3, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (4, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (5, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (6, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (7, 0, 0, 0)&#xA;&#xA;-- Extract and assign various parts of values from current date to variable&#xA;&#xA;DECLARE @CurrentDate AS DATETIME = @StartDate&#xA;SET @CurrentMonth = DATEPART(MM, @CurrentDate)&#xA;SET @CurrentYear = DATEPART(YY, @CurrentDate)&#xA;SET @CurrentQuarter = DATEPART(QQ, @CurrentDate)&#xA;&#xA;-- Proceed only if start date(current date ) is less than end date you specified above&#xA;&#xA;WHILE @CurrentDate &lt; @EndDate&#xA;BEGIN&#xA; &#xA;-- Begin day of week logic&#xA;&#xA;&#x9;/*Check for change in month of the current date if month changed then change variable value*/&#xA;&#x9;IF @CurrentMonth &lt;&gt; DATEPART(MM, @CurrentDate) &#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET MonthCount = 0&#xA;&#x9;&#x9;SET @CurrentMonth = DATEPART(MM, @CurrentDate)&#xA;&#x9;END&#xA;&#xA;&#x9;/* Check for change in quarter of the current date if quarter changed then change variable value*/&#xA;&#xA;&#x9;IF @CurrentQuarter &lt;&gt; DATEPART(QQ, @CurrentDate)&#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET QuarterCount = 0&#xA;&#x9;&#x9;SET @CurrentQuarter = DATEPART(QQ, @CurrentDate)&#xA;&#x9;END&#xA;       &#xA;&#x9;/* Check for Change in Year of the Current date if Year changed then change variable value*/&#xA;&#x9;&#xA;&#x9;IF @CurrentYear &lt;&gt; DATEPART(YY, @CurrentDate)&#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET YearCount = 0&#xA;&#x9;&#x9;SET @CurrentYear = DATEPART(YY, @CurrentDate)&#xA;&#x9;END&#xA;&#x9;&#xA;-- Set values in table data type created above from variables &#xA;&#xA;&#x9;UPDATE @DayOfWeek&#xA;&#x9;SET &#xA;&#x9;&#x9;MonthCount = MonthCount + 1,&#xA;&#x9;&#x9;QuarterCount = QuarterCount + 1,&#xA;&#x9;&#x9;YearCount = YearCount + 1&#xA;&#x9;WHERE DOW = DATEPART(DW, @CurrentDate)&#xA;&#xA;&#x9;SELECT&#xA;&#x9;&#x9;@DayOfWeekInMonth = MonthCount,&#xA;&#x9;&#x9;@DayOfQuarter = QuarterCount,&#xA;&#x9;&#x9;@DayOfWeekInYear = YearCount&#xA;&#x9;FROM @DayOfWeek&#xA;&#x9;WHERE DOW = DATEPART(DW, @CurrentDate)&#xA;&#x9;&#xA;-- End day of week logic&#xA;&#xA;&#x9;/* Populate your dimension table with values*/&#xA;&#x9;&#xA;&#x9;INSERT INTO [dbo].[DimDate]&#xA;&#x9;SELECT&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;CONVERT (char(8),@CurrentDate,112) AS Date_SK,&#xA;&#x9;&#x9;@CurrentDate AS Date,&#xA;&#x9;&#x9;CONVERT (char(10),@CurrentDate,101) AS FullDate,&#xA;&#x9;&#x9;DATEPART(DD, @CurrentDate) AS DayOfMonth,&#xA;&#x9;&#x9;DATENAME(DW, @CurrentDate) AS DayName,&#xA;&#x9;&#x9;DATEPART(DW, @CurrentDate) AS DayOfWeek,&#xA;&#x9;&#x9;@DayOfWeekInMonth AS DayOfWeekInMonth,&#xA;&#x9;&#x9;@DayOfWeekInYear AS DayOfWeekInYear,&#xA;&#x9;&#x9;@DayOfQuarter AS DayOfQuarter,&#xA;&#x9;&#x9;DATEPART(DY, @CurrentDate) AS DayOfYear,&#xA;&#x9;&#x9;DATEPART(WW, @CurrentDate) + 1 - DATEPART(WW, CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(MM, @CurrentDate)) + '/1/' + CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(YY, @CurrentDate))) AS WeekOfMonth,&#xA;&#x9;&#x9;(DATEDIFF(DD, DATEADD(QQ, DATEDIFF(QQ, 0, @CurrentDate), 0), &#xA;&#x9;&#x9;@CurrentDate) / 7) + 1 AS WeekOfQuarter,&#xA;&#x9;&#x9;DATEPART(WW, @CurrentDate) AS WeekOfYear,&#xA;&#x9;&#x9;DATEPART(MM, @CurrentDate) AS Month,&#xA;&#x9;&#x9;DATENAME(MM, @CurrentDate) AS MonthName,&#xA;&#x9;&#x9;CASE&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (1, 4, 7, 10) THEN 1&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (2, 5, 8, 11) THEN 2&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (3, 6, 9, 12) THEN 3&#xA;&#x9;&#x9;&#x9;END AS MonthOfQuarter,&#xA;&#x9;&#x9;'Q' + CONVERT(VARCHAR, DATEPART(QQ, @CurrentDate)) AS Quarter,&#xA;&#x9;&#x9;CASE DATEPART(QQ, @CurrentDate)&#xA;&#x9;&#x9;&#x9;WHEN 1 THEN 'First'&#xA;&#x9;&#x9;&#x9;WHEN 2 THEN 'Second'&#xA;&#x9;&#x9;&#x9;WHEN 3 THEN 'Third'&#xA;&#x9;&#x9;&#x9;WHEN 4 THEN 'Fourth'&#xA;&#x9;&#x9;&#x9;END AS QuarterName,&#xA;&#x9;&#x9;DATEPART(YEAR, @CurrentDate) AS Year,&#xA;&#x9;&#x9;'CY ' + CONVERT(VARCHAR, DATEPART(YEAR, @CurrentDate)) AS YearName,&#xA;&#x9;&#x9;LEFT(DATENAME(MM, @CurrentDate), 3) + '-' + CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(YY, @CurrentDate)) AS MonthYear,&#xA;&#x9;&#x9;RIGHT('0' + CONVERT(VARCHAR, DATEPART(MM, @CurrentDate)),2) + &#xA;&#x9;&#x9;CONVERT(VARCHAR, DATEPART(YY, @CurrentDate)) AS MMYYYY,&#xA;&#x9;&#x9;CONVERT(DATETIME, CONVERT(DATE, DATEADD(DD, - (DATEPART(DD, &#xA;&#x9;&#x9;@CurrentDate) - 1), @CurrentDate))) AS FirstDayOfMonth,&#xA;&#x9;&#x9;CONVERT(DATETIME, CONVERT(DATE, DATEADD(DD, - (DATEPART(DD, &#xA;&#x9;&#x9;(DATEADD(MM, 1, @CurrentDate)))), DATEADD(MM, 1, &#xA;&#x9;&#x9;@CurrentDate)))) AS LastDayOfMonth,&#xA;&#x9;&#x9;DATEADD(QQ, DATEDIFF(QQ, 0, @CurrentDate), 0) AS FirstDayOfQuarter,&#xA;&#x9;&#x9;DATEADD(QQ, DATEDIFF(QQ, -1, @CurrentDate), -1) AS LastDayOfQuarter,&#xA;&#x9;&#x9;CONVERT(DATETIME, '01/01/' + CONVERT(VARCHAR, DATEPART(YY, &#xA;&#x9;&#x9;@CurrentDate))) AS FirstDayOfYear,&#xA;&#x9;&#x9;CONVERT(DATETIME, '12/31/' + CONVERT(VARCHAR, DATEPART(YY, &#xA;&#x9;&#x9;@CurrentDate))) AS LastDayOfYear,&#xA;&#x9;&#x9;NULL AS IsHoliday,&#xA;&#x9;&#x9;CASE DATEPART(DW, @CurrentDate)&#xA;&#x9;&#x9;&#x9;WHEN 1 THEN 0&#xA;&#x9;&#x9;&#x9;WHEN 2 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 3 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 4 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 5 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 6 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 7 THEN 0&#xA;&#x9;&#x9;&#x9;END AS IsWeekday,&#xA;&#x9;&#x9;NULL AS Holiday,&#xA;&#x9;&#x9; CASE&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (12,1,2) THEN 'Winter'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (3,4,5) THEN 'Spring'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (6,7,8) THEN 'Summer'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (9,10,11) THEN 'Fall'&#xA;&#x9;&#x9;&#x9;END AS Season&#xA;&#xA;&#x9;SET @CurrentDate = DATEADD(DD, 1, @CurrentDate)&#xA;END&#xA;&#xA;--Update values of holiday as per USA Govt. Declaration for National Holiday&#xA;&#xA;&#x9;-- THANKSGIVING - Fourth THURSDAY in November&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Thanksgiving Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 11 &#xA;&#x9;&#x9;AND [DayName] = 'Thursday' &#xA;&#x9;&#x9;AND DayOfWeekInMonth = 4&#xA;&#xA;&#x9;-- CHRISTMAS&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Christmas Day'&#xA;&#x9;&#x9;&#xA;&#x9;WHERE [Month] = 12 AND [DayOfMonth]  = 25&#xA;&#xA;&#x9;-- 4th of July&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Independance Day'&#xA;&#x9;WHERE [Month] = 7 AND [DayOfMonth] = 4&#xA;&#xA;&#x9;-- New Years Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'New Year''s Day'&#xA;&#x9;WHERE [Month] = 1 AND [DayOfMonth] = 1&#xA;&#xA;&#x9;-- Memorial Day - Last Monday in May&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Memorial Day'&#xA;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;WHERE Date_SK IN &#xA;&#x9;&#x9;(&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;MAX(Date_SK)&#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[MonthName] = 'May'&#xA;&#x9;&#x9;&#x9;AND [DayName]  = 'Monday'&#xA;&#x9;&#x9;GROUP BY&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[Month]&#xA;&#x9;&#x9;)&#xA;&#xA;&#x9;-- Labor Day - First Monday in September&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Labor Day'&#xA;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;WHERE Date_SK IN &#xA;&#x9;&#x9;(&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;MIN(Date_SK)&#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[MonthName] = 'September'&#xA;&#x9;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;GROUP BY&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[Month]&#xA;&#x9;&#x9;)&#xA;&#xA;&#x9;-- Valentine's Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Valentine''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 2 &#xA;&#x9;&#x9;AND [DayOfMonth] = 14&#xA;&#xA;&#x9;-- Saint Patrick's Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Saint Patrick''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 3&#xA;&#x9;&#x9;AND [DayOfMonth] = 17&#xA;&#xA;&#x9;-- Martin Luthor King Day - Third Monday in January starting in 1983&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Martin Luthor King Jr Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 1&#xA;&#x9;&#x9;AND [DayName]  = 'Monday'&#xA;&#x9;&#x9;AND [Year] &gt;= 1983&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- President's Day - Third Monday in February&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'President''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 2&#xA;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- Mother's Day - Second Sunday of May&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Mother''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 5&#xA;&#x9;&#x9;AND [DayName] = 'Sunday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 2&#xA;&#xA;&#x9;-- Father's Day - Third Sunday of June&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Father''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 6&#xA;&#x9;&#x9;AND [DayName] = 'Sunday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- Halloween 10/31*/&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Halloween'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 10&#xA;&#x9;&#x9;AND [DayOfMonth] = 31&#xA;&#xA;&#x9;-- Election Day - The first Tuesday after the first Monday in November&#xA;&#x9;BEGIN&#xA;&#x9;DECLARE @Holidays TABLE (ID INT IDENTITY(1,1), &#xA;&#x9;DateID int, Week TINYINT, YEAR CHAR(4), DAY CHAR(2))&#xA;&#xA;&#x9;&#x9;INSERT INTO @Holidays(DateID, [Year],[Day])&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;Date_SK,&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[DayOfMonth] &#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[Month] = 11&#xA;&#x9;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;ORDER BY&#xA;&#x9;&#x9;&#x9;YEAR,&#xA;&#x9;&#x9;&#x9;DayOfMonth &#xA;&#xA;&#x9;&#x9;DECLARE @CNTR INT, @POS INT, @STARTYEAR INT, @ENDYEAR INT, @MINDAY INT&#xA;&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;@CURRENTYEAR = MIN([Year]),&#xA;&#x9;&#x9;&#x9;@STARTYEAR = MIN([Year]),&#xA;&#x9;&#x9;&#x9;@ENDYEAR = MAX([Year])&#xA;&#x9;&#x9;FROM @Holidays&#xA;&#xA;&#x9;&#x9;WHILE @CURRENTYEAR &lt;= @ENDYEAR&#xA;&#x9;&#x9;BEGIN&#xA;&#x9;&#x9;&#x9;SELECT @CNTR = COUNT([Year])&#xA;&#x9;&#x9;&#x9;FROM @Holidays&#xA;&#x9;&#x9;&#x9;WHERE [Year] = @CURRENTYEAR&#xA;&#xA;&#x9;&#x9;&#x9;SET @POS = 1&#xA;&#xA;&#x9;&#x9;&#x9;WHILE @POS &lt;= @CNTR&#xA;&#x9;&#x9;&#x9;BEGIN&#xA;&#x9;&#x9;&#x9;&#x9;SELECT @MINDAY = MIN(DAY)&#xA;&#x9;&#x9;&#x9;&#x9;FROM @Holidays&#xA;&#x9;&#x9;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;[Year] = @CURRENTYEAR&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;AND [Week] IS NULL&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;UPDATE @Holidays&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET [Week] = @POS&#xA;&#x9;&#x9;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;[Year] = @CURRENTYEAR&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;AND [Day] = @MINDAY&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;SELECT @POS = @POS + 1&#xA;&#x9;&#x9;&#x9;END&#xA;&#xA;&#x9;&#x9;&#x9;SELECT @CURRENTYEAR = @CURRENTYEAR + 1&#xA;&#x9;&#x9;END&#xA;&#xA;&#x9;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;&#x9;SET Holiday  = 'Election Day'&#x9;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;FROM [dbo].[DimDate] DT&#xA;&#x9;&#x9;&#x9;JOIN @Holidays HL ON (HL.DateID + 1) = DT.Date_SK&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[Week] = 1&#xA;&#x9;END&#xA;&#x9;-- Set flag for USA holidays in Dimension&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;SET IsHoliday = &#xA;&#x9;&#x9;CASE&#x9;WHEN Holiday IS NULL THEN 0 &#xA;&#x9;&#x9;&#x9;WHEN Holiday IS NOT NULL THEN 1 &#xA;&#x9;END&#xA;&#xA;/*****************************************************************************************/&#xA;&#xA;SELECT * FROM [dbo].[DimDate]&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-          </DTS:ObjectData>
-        </DTS:Executable>
         <DTS:Executable
           DTS:refId="Package\Load Dim Tables\Load DimAgent"
           DTS:CreationName="Microsoft.Pipeline"
@@ -781,6 +764,23 @@ FROM            Customer</property>
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\Load Dim Tables\Load DimDate"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{FFB21234-812C-4EFE-98EB-A74B7DC307F8}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimDate"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server vNext CTP2.0; © 2017 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{6588D82C-9734-4BC0-AE69-DA2C35C9F73B}"
+              SQLTask:SqlStatementSource="USE DWAgentSales&#xA;&#xA;-- Specify start date and end date here&#xA;-- Value of start date must be less than your end date &#xA;&#xA;DECLARE @StartDate DATETIME = '01/01/2010' -- Starting value of date range&#xA;DECLARE @EndDate DATETIME = '9/19/2017' -- End Value of date range&#xA;&#xA;-- Temporary variables to hold the values during processing of each date of year&#xA;DECLARE&#xA;&#x9;@DayOfWeekInMonth INT,&#xA;&#x9;@DayOfWeekInYear INT,&#xA;&#x9;@DayOfQuarter INT,&#xA;&#x9;@WeekOfMonth INT,&#xA;&#x9;@CurrentYear INT,&#xA;&#x9;@CurrentMonth INT,&#xA;&#x9;@CurrentQuarter INT&#xA;&#xA;-- Table data type to store the day of week count for the month and year&#xA;DECLARE @DayOfWeek TABLE (DOW INT, MonthCount INT, QuarterCount INT, YearCount INT)&#xA;&#xA;INSERT INTO @DayOfWeek VALUES (1, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (2, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (3, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (4, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (5, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (6, 0, 0, 0)&#xA;INSERT INTO @DayOfWeek VALUES (7, 0, 0, 0)&#xA;&#xA;-- Extract and assign various parts of values from current date to variable&#xA;&#xA;DECLARE @CurrentDate AS DATETIME = @StartDate&#xA;SET @CurrentMonth = DATEPART(MM, @CurrentDate)&#xA;SET @CurrentYear = DATEPART(YY, @CurrentDate)&#xA;SET @CurrentQuarter = DATEPART(QQ, @CurrentDate)&#xA;&#xA;-- Proceed only if start date(current date ) is less than end date you specified above&#xA;&#xA;WHILE @CurrentDate &lt; @EndDate&#xA;BEGIN&#xA; &#xA;-- Begin day of week logic&#xA;&#xA;&#x9;/*Check for change in month of the current date if month changed then change variable value*/&#xA;&#x9;IF @CurrentMonth &lt;&gt; DATEPART(MM, @CurrentDate) &#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET MonthCount = 0&#xA;&#x9;&#x9;SET @CurrentMonth = DATEPART(MM, @CurrentDate)&#xA;&#x9;END&#xA;&#xA;&#x9;/* Check for change in quarter of the current date if quarter changed then change variable value*/&#xA;&#xA;&#x9;IF @CurrentQuarter &lt;&gt; DATEPART(QQ, @CurrentDate)&#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET QuarterCount = 0&#xA;&#x9;&#x9;SET @CurrentQuarter = DATEPART(QQ, @CurrentDate)&#xA;&#x9;END&#xA;       &#xA;&#x9;/* Check for Change in Year of the Current date if Year changed then change variable value*/&#xA;&#x9;&#xA;&#x9;IF @CurrentYear &lt;&gt; DATEPART(YY, @CurrentDate)&#xA;&#x9;BEGIN&#xA;&#x9;&#x9;UPDATE @DayOfWeek&#xA;&#x9;&#x9;SET YearCount = 0&#xA;&#x9;&#x9;SET @CurrentYear = DATEPART(YY, @CurrentDate)&#xA;&#x9;END&#xA;&#x9;&#xA;-- Set values in table data type created above from variables &#xA;&#xA;&#x9;UPDATE @DayOfWeek&#xA;&#x9;SET &#xA;&#x9;&#x9;MonthCount = MonthCount + 1,&#xA;&#x9;&#x9;QuarterCount = QuarterCount + 1,&#xA;&#x9;&#x9;YearCount = YearCount + 1&#xA;&#x9;WHERE DOW = DATEPART(DW, @CurrentDate)&#xA;&#xA;&#x9;SELECT&#xA;&#x9;&#x9;@DayOfWeekInMonth = MonthCount,&#xA;&#x9;&#x9;@DayOfQuarter = QuarterCount,&#xA;&#x9;&#x9;@DayOfWeekInYear = YearCount&#xA;&#x9;FROM @DayOfWeek&#xA;&#x9;WHERE DOW = DATEPART(DW, @CurrentDate)&#xA;&#x9;&#xA;-- End day of week logic&#xA;&#xA;&#x9;/* Populate your dimension table with values*/&#xA;&#x9;&#xA;&#x9;INSERT INTO [dbo].[DimDate]&#xA;&#x9;SELECT&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;CONVERT (char(8),@CurrentDate,112) AS Date_SK,&#xA;&#x9;&#x9;@CurrentDate AS Date,&#xA;&#x9;&#x9;CONVERT (char(10),@CurrentDate,101) AS FullDate,&#xA;&#x9;&#x9;DATEPART(DD, @CurrentDate) AS DayOfMonth,&#xA;&#x9;&#x9;DATENAME(DW, @CurrentDate) AS DayName,&#xA;&#x9;&#x9;DATEPART(DW, @CurrentDate) AS DayOfWeek,&#xA;&#x9;&#x9;@DayOfWeekInMonth AS DayOfWeekInMonth,&#xA;&#x9;&#x9;@DayOfWeekInYear AS DayOfWeekInYear,&#xA;&#x9;&#x9;@DayOfQuarter AS DayOfQuarter,&#xA;&#x9;&#x9;DATEPART(DY, @CurrentDate) AS DayOfYear,&#xA;&#x9;&#x9;DATEPART(WW, @CurrentDate) + 1 - DATEPART(WW, CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(MM, @CurrentDate)) + '/1/' + CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(YY, @CurrentDate))) AS WeekOfMonth,&#xA;&#x9;&#x9;(DATEDIFF(DD, DATEADD(QQ, DATEDIFF(QQ, 0, @CurrentDate), 0), &#xA;&#x9;&#x9;@CurrentDate) / 7) + 1 AS WeekOfQuarter,&#xA;&#x9;&#x9;DATEPART(WW, @CurrentDate) AS WeekOfYear,&#xA;&#x9;&#x9;DATEPART(MM, @CurrentDate) AS Month,&#xA;&#x9;&#x9;DATENAME(MM, @CurrentDate) AS MonthName,&#xA;&#x9;&#x9;CASE&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (1, 4, 7, 10) THEN 1&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (2, 5, 8, 11) THEN 2&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (3, 6, 9, 12) THEN 3&#xA;&#x9;&#x9;&#x9;END AS MonthOfQuarter,&#xA;&#x9;&#x9;'Q' + CONVERT(VARCHAR, DATEPART(QQ, @CurrentDate)) AS Quarter,&#xA;&#x9;&#x9;CASE DATEPART(QQ, @CurrentDate)&#xA;&#x9;&#x9;&#x9;WHEN 1 THEN 'First'&#xA;&#x9;&#x9;&#x9;WHEN 2 THEN 'Second'&#xA;&#x9;&#x9;&#x9;WHEN 3 THEN 'Third'&#xA;&#x9;&#x9;&#x9;WHEN 4 THEN 'Fourth'&#xA;&#x9;&#x9;&#x9;END AS QuarterName,&#xA;&#x9;&#x9;DATEPART(YEAR, @CurrentDate) AS Year,&#xA;&#x9;&#x9;'CY ' + CONVERT(VARCHAR, DATEPART(YEAR, @CurrentDate)) AS YearName,&#xA;&#x9;&#x9;LEFT(DATENAME(MM, @CurrentDate), 3) + '-' + CONVERT(VARCHAR, &#xA;&#x9;&#x9;DATEPART(YY, @CurrentDate)) AS MonthYear,&#xA;&#x9;&#x9;RIGHT('0' + CONVERT(VARCHAR, DATEPART(MM, @CurrentDate)),2) + &#xA;&#x9;&#x9;CONVERT(VARCHAR, DATEPART(YY, @CurrentDate)) AS MMYYYY,&#xA;&#x9;&#x9;CONVERT(DATETIME, CONVERT(DATE, DATEADD(DD, - (DATEPART(DD, &#xA;&#x9;&#x9;@CurrentDate) - 1), @CurrentDate))) AS FirstDayOfMonth,&#xA;&#x9;&#x9;CONVERT(DATETIME, CONVERT(DATE, DATEADD(DD, - (DATEPART(DD, &#xA;&#x9;&#x9;(DATEADD(MM, 1, @CurrentDate)))), DATEADD(MM, 1, &#xA;&#x9;&#x9;@CurrentDate)))) AS LastDayOfMonth,&#xA;&#x9;&#x9;DATEADD(QQ, DATEDIFF(QQ, 0, @CurrentDate), 0) AS FirstDayOfQuarter,&#xA;&#x9;&#x9;DATEADD(QQ, DATEDIFF(QQ, -1, @CurrentDate), -1) AS LastDayOfQuarter,&#xA;&#x9;&#x9;CONVERT(DATETIME, '01/01/' + CONVERT(VARCHAR, DATEPART(YY, &#xA;&#x9;&#x9;@CurrentDate))) AS FirstDayOfYear,&#xA;&#x9;&#x9;CONVERT(DATETIME, '12/31/' + CONVERT(VARCHAR, DATEPART(YY, &#xA;&#x9;&#x9;@CurrentDate))) AS LastDayOfYear,&#xA;&#x9;&#x9;NULL AS IsHoliday,&#xA;&#x9;&#x9;CASE DATEPART(DW, @CurrentDate)&#xA;&#x9;&#x9;&#x9;WHEN 1 THEN 0&#xA;&#x9;&#x9;&#x9;WHEN 2 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 3 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 4 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 5 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 6 THEN 1&#xA;&#x9;&#x9;&#x9;WHEN 7 THEN 0&#xA;&#x9;&#x9;&#x9;END AS IsWeekday,&#xA;&#x9;&#x9;NULL AS Holiday,&#xA;&#x9;&#x9; CASE&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (12,1,2) THEN 'Winter'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (3,4,5) THEN 'Spring'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (6,7,8) THEN 'Summer'&#xA;&#x9;&#x9;&#x9;WHEN DATEPART(MM, @CurrentDate) IN (9,10,11) THEN 'Fall'&#xA;&#x9;&#x9;&#x9;END AS Season&#xA;&#xA;&#x9;SET @CurrentDate = DATEADD(DD, 1, @CurrentDate)&#xA;END&#xA;&#xA;--Update values of holiday as per USA Govt. Declaration for National Holiday&#xA;&#xA;&#x9;-- THANKSGIVING - Fourth THURSDAY in November&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Thanksgiving Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 11 &#xA;&#x9;&#x9;AND [DayName] = 'Thursday' &#xA;&#x9;&#x9;AND DayOfWeekInMonth = 4&#xA;&#xA;&#x9;-- CHRISTMAS&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Christmas Day'&#xA;&#x9;&#x9;&#xA;&#x9;WHERE [Month] = 12 AND [DayOfMonth]  = 25&#xA;&#xA;&#x9;-- 4th of July&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Independance Day'&#xA;&#x9;WHERE [Month] = 7 AND [DayOfMonth] = 4&#xA;&#xA;&#x9;-- New Years Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'New Year''s Day'&#xA;&#x9;WHERE [Month] = 1 AND [DayOfMonth] = 1&#xA;&#xA;&#x9;-- Memorial Day - Last Monday in May&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Memorial Day'&#xA;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;WHERE Date_SK IN &#xA;&#x9;&#x9;(&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;MAX(Date_SK)&#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[MonthName] = 'May'&#xA;&#x9;&#x9;&#x9;AND [DayName]  = 'Monday'&#xA;&#x9;&#x9;GROUP BY&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[Month]&#xA;&#x9;&#x9;)&#xA;&#xA;&#x9;-- Labor Day - First Monday in September&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Labor Day'&#xA;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;WHERE Date_SK IN &#xA;&#x9;&#x9;(&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;MIN(Date_SK)&#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[MonthName] = 'September'&#xA;&#x9;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;GROUP BY&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[Month]&#xA;&#x9;&#x9;)&#xA;&#xA;&#x9;-- Valentine's Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Valentine''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 2 &#xA;&#x9;&#x9;AND [DayOfMonth] = 14&#xA;&#xA;&#x9;-- Saint Patrick's Day&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Saint Patrick''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 3&#xA;&#x9;&#x9;AND [DayOfMonth] = 17&#xA;&#xA;&#x9;-- Martin Luthor King Day - Third Monday in January starting in 1983&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Martin Luthor King Jr Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 1&#xA;&#x9;&#x9;AND [DayName]  = 'Monday'&#xA;&#x9;&#x9;AND [Year] &gt;= 1983&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- President's Day - Third Monday in February&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'President''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 2&#xA;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- Mother's Day - Second Sunday of May&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Mother''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 5&#xA;&#x9;&#x9;AND [DayName] = 'Sunday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 2&#xA;&#xA;&#x9;-- Father's Day - Third Sunday of June&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Father''s Day'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 6&#xA;&#x9;&#x9;AND [DayName] = 'Sunday'&#xA;&#x9;&#x9;AND DayOfWeekInMonth = 3&#xA;&#xA;&#x9;-- Halloween 10/31*/&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;SET Holiday = 'Halloween'&#xA;&#x9;WHERE&#xA;&#x9;&#x9;[Month] = 10&#xA;&#x9;&#x9;AND [DayOfMonth] = 31&#xA;&#xA;&#x9;-- Election Day - The first Tuesday after the first Monday in November&#xA;&#x9;BEGIN&#xA;&#x9;DECLARE @Holidays TABLE (ID INT IDENTITY(1,1), &#xA;&#x9;DateID int, Week TINYINT, YEAR CHAR(4), DAY CHAR(2))&#xA;&#xA;&#x9;&#x9;INSERT INTO @Holidays(DateID, [Year],[Day])&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;Date_SK,&#xA;&#x9;&#x9;&#x9;[Year],&#xA;&#x9;&#x9;&#x9;[DayOfMonth] &#xA;&#x9;&#x9;FROM [dbo].[DimDate]&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[Month] = 11&#xA;&#x9;&#x9;&#x9;AND [DayName] = 'Monday'&#xA;&#x9;&#x9;ORDER BY&#xA;&#x9;&#x9;&#x9;YEAR,&#xA;&#x9;&#x9;&#x9;DayOfMonth &#xA;&#xA;&#x9;&#x9;DECLARE @CNTR INT, @POS INT, @STARTYEAR INT, @ENDYEAR INT, @MINDAY INT&#xA;&#xA;&#x9;&#x9;SELECT&#xA;&#x9;&#x9;&#x9;@CURRENTYEAR = MIN([Year]),&#xA;&#x9;&#x9;&#x9;@STARTYEAR = MIN([Year]),&#xA;&#x9;&#x9;&#x9;@ENDYEAR = MAX([Year])&#xA;&#x9;&#x9;FROM @Holidays&#xA;&#xA;&#x9;&#x9;WHILE @CURRENTYEAR &lt;= @ENDYEAR&#xA;&#x9;&#x9;BEGIN&#xA;&#x9;&#x9;&#x9;SELECT @CNTR = COUNT([Year])&#xA;&#x9;&#x9;&#x9;FROM @Holidays&#xA;&#x9;&#x9;&#x9;WHERE [Year] = @CURRENTYEAR&#xA;&#xA;&#x9;&#x9;&#x9;SET @POS = 1&#xA;&#xA;&#x9;&#x9;&#x9;WHILE @POS &lt;= @CNTR&#xA;&#x9;&#x9;&#x9;BEGIN&#xA;&#x9;&#x9;&#x9;&#x9;SELECT @MINDAY = MIN(DAY)&#xA;&#x9;&#x9;&#x9;&#x9;FROM @Holidays&#xA;&#x9;&#x9;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;[Year] = @CURRENTYEAR&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;AND [Week] IS NULL&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;UPDATE @Holidays&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;SET [Week] = @POS&#xA;&#x9;&#x9;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;[Year] = @CURRENTYEAR&#xA;&#x9;&#x9;&#x9;&#x9;&#x9;AND [Day] = @MINDAY&#xA;&#xA;&#x9;&#x9;&#x9;&#x9;SELECT @POS = @POS + 1&#xA;&#x9;&#x9;&#x9;END&#xA;&#xA;&#x9;&#x9;&#x9;SELECT @CURRENTYEAR = @CURRENTYEAR + 1&#xA;&#x9;&#x9;END&#xA;&#xA;&#x9;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;&#x9;&#x9;SET Holiday  = 'Election Day'&#x9;&#x9;&#x9;&#x9;&#xA;&#x9;&#x9;FROM [dbo].[DimDate] DT&#xA;&#x9;&#x9;&#x9;JOIN @Holidays HL ON (HL.DateID + 1) = DT.Date_SK&#xA;&#x9;&#x9;WHERE&#xA;&#x9;&#x9;&#x9;[Week] = 1&#xA;&#x9;END&#xA;&#x9;-- Set flag for USA holidays in Dimension&#xA;&#x9;UPDATE [dbo].[DimDate]&#xA;&#x9;SET IsHoliday = &#xA;&#x9;&#x9;CASE&#x9;WHEN Holiday IS NULL THEN 0 &#xA;&#x9;&#x9;&#x9;WHEN Holiday IS NOT NULL THEN 1 &#xA;&#x9;END&#xA;&#xA;/*****************************************************************************************/&#xA;&#xA;SELECT * FROM [dbo].[DimDate]&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\Load Dim Tables\Load DimListing"
           DTS:CreationName="Microsoft.Pipeline"
           DTS:Description="Data Flow Task"
@@ -893,10 +893,6 @@ FROM            Customer</property>
                           dataType="i4"
                           name="Listing_SK" />
                         <externalMetadataColumn
-                          refId="Package\Load Dim Tables\Load DimListing\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Listing_AK]"
-                          dataType="i4"
-                          name="Listing_AK" />
-                        <externalMetadataColumn
                           refId="Package\Load Dim Tables\Load DimListing\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[SaleStatus]"
                           dataType="wstr"
                           length="10"
@@ -905,6 +901,10 @@ FROM            Customer</property>
                           refId="Package\Load Dim Tables\Load DimListing\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[AskingPrice]"
                           dataType="cy"
                           name="AskingPrice" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dim Tables\Load DimListing\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Listing_AK]"
+                          dataType="i4"
+                          name="Listing_AK" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -1243,6 +1243,12 @@ FROM            Listing INNER JOIN
                           cachedName="PropertyID"
                           externalMetadataColumnId="Package\Load Dim Tables\Load DimProperty\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Property_AK]"
                           lineageId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Output].Columns[PropertyID]" />
+                        <inputColumn
+                          refId="Package\Load Dim Tables\Load DimProperty\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Bathrooms]"
+                          cachedDataType="i4"
+                          cachedName="Bathrooms"
+                          externalMetadataColumnId="Package\Load Dim Tables\Load DimProperty\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Bathrooms]"
+                          lineageId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Output].Columns[Bathrooms]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -1250,10 +1256,6 @@ FROM            Listing INNER JOIN
                           refId="Package\Load Dim Tables\Load DimProperty\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Property_SK]"
                           dataType="i4"
                           name="Property_SK" />
-                        <externalMetadataColumn
-                          refId="Package\Load Dim Tables\Load DimProperty\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Property_AK]"
-                          dataType="i4"
-                          name="Property_AK" />
                         <externalMetadataColumn
                           refId="Package\Load Dim Tables\Load DimProperty\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Address]"
                           dataType="wstr"
@@ -1300,6 +1302,10 @@ FROM            Listing INNER JOIN
                           dataType="wstr"
                           length="4"
                           name="Zone" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dim Tables\Load DimProperty\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Property_AK]"
+                          dataType="i4"
+                          name="Property_AK" />
                       </externalMetadataColumns>
                     </input>
                   </inputs>
@@ -1353,8 +1359,8 @@ FROM            Listing INNER JOIN
                       dataType="System.String"
                       description="The SQL command to be executed."
                       name="SqlCommand"
-                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT        PropertyID, Address, City, State, Zipcode, Bedrooms, Stories, SqFt, YearBuilt, [Zone]
-FROM            Property</property>
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT PropertyID, Address, City, State, Zipcode, Bedrooms, Stories, SqFt, YearBuilt, [Zone], Bathrooms
+FROM     Property</property>
                     <property
                       dataType="System.String"
                       description="The variable that contains the SQL command to be executed."
@@ -1486,6 +1492,15 @@ FROM            Property</property>
                           lineageId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Output].Columns[Zone]"
                           name="Zone"
                           truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Output].Columns[Bathrooms]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Bathrooms]"
+                          lineageId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Output].Columns[Bathrooms]"
+                          name="Bathrooms"
+                          truncationRowDisposition="FailComponent" />
                       </outputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -1535,6 +1550,10 @@ FROM            Property</property>
                           dataType="wstr"
                           length="4"
                           name="Zone" />
+                        <externalMetadataColumn
+                          refId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Output].ExternalColumns[Bathrooms]"
+                          dataType="i4"
+                          name="Bathrooms" />
                       </externalMetadataColumns>
                     </output>
                     <output
@@ -1599,6 +1618,11 @@ FROM            Property</property>
                           lineageId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Zone]"
                           name="Zone" />
                         <outputColumn
+                          refId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Bathrooms]"
+                          dataType="i4"
+                          lineageId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[Bathrooms]"
+                          name="Bathrooms" />
+                        <outputColumn
                           refId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
                           dataType="i4"
                           lineageId="Package\Load Dim Tables\Load DimProperty\OLE DB Source.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
@@ -1632,7 +1656,7 @@ FROM            Property</property>
           DTS:refId="Package\Load Dim Tables.PrecedenceConstraints[Constraint]"
           DTS:CreationName=""
           DTS:DTSID="{9B1A13A4-F0FE-40E8-863C-10D695DB5F24}"
-          DTS:From="Package\Load Dim Tables\Load Dim Date"
+          DTS:From="Package\Load Dim Tables\Load DimDate"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint"
           DTS:To="Package\Load Dim Tables\Load DimListing" />
@@ -1671,7 +1695,1339 @@ FROM            Property</property>
       DTS:LocaleID="-1"
       DTS:ObjectName="Load Fact Table">
       <DTS:Variables />
-      <DTS:Executables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\Load Fact Table\Load FactAgentSales"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Data Flow Task"
+          DTS:DTSID="{7C42A6AA-143B-432C-AE38-434D172B48AD}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load FactAgentSales"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Load Fact Table\Load FactAgentSales\Agent"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="Agent"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT Agent_SK, Agent_AK
+FROM DimAgent</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT Agent_SK, Agent_AK
+FROM DimAgent) [refTable]
+where [refTable].[Agent_AK] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="Agent_SK" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Agent_AK" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap">#{Package\Load Fact Table\Load FactAgentSales\245:invalid};</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Fact Table\Load FactAgentSales\Agent.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      connectionManagerRefId="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Fact Table\Load FactAgentSales\Agent.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\Agent.Inputs[Lookup Input].Columns[AgentID]"
+                          cachedDataType="i4"
+                          cachedName="AgentID"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[AgentID]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">Agent_AK</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      errorRowDisposition="FailComponent"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\Agent.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Match Output].Columns[Agent_SK]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Match Output].Columns[Agent_SK]"
+                          name="Agent_SK"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">Agent_SK</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\Agent.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\Agent.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="CustomerSK"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT Customer_SK, Customer_AK
+FROM DimCustomer</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT Customer_SK, Customer_AK
+FROM DimCustomer) [refTable]
+where [refTable].[Customer_AK] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="Customer_SK" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Customer_AK" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap">#{Package\Load Fact Table\Load FactAgentSales\246:invalid};</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      connectionManagerRefId="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Inputs[Lookup Input].Columns[CustomerID]"
+                          cachedDataType="i4"
+                          cachedName="CustomerID"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[CustomerID]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">Customer_AK</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      errorRowDisposition="IgnoreFailure"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Match Output].Columns[Customer_SK]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Match Output].Columns[Customer_SK]"
+                          name="Customer_SK"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">Customer_SK</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Fact Table\Load FactAgentSales\DateSK"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="DateSK"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT Date_SK, Date
+FROM DimDate</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT Date_SK, Date
+FROM DimDate) [refTable]
+where [refTable].[Date] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="Date_SK" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Date" dataType="DT_DBTIMESTAMP" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap">#{Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ContactDate]};</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Fact Table\Load FactAgentSales\DateSK.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      connectionManagerRefId="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Fact Table\Load FactAgentSales\DateSK.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\DateSK.Inputs[Lookup Input].Columns[ContactDate]"
+                          cachedDataType="dbTimeStamp"
+                          cachedName="ContactDate"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ContactDate]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">Date</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      errorRowDisposition="IgnoreFailure"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\DateSK.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Match Output].Columns[Date_SK]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Match Output].Columns[Date_SK]"
+                          name="Date_SK"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">Date_SK</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\DateSK.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\DateSK.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="Lisitng SK"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT Listing_SK, Listing_AK
+FROM DimListing</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT Listing_SK, Listing_AK
+FROM DimListing) [refTable]
+where [refTable].[Listing_AK] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="Listing_SK" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Listing_AK" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap">#{Package\Load Fact Table\Load FactAgentSales\247:invalid};</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      connectionManagerRefId="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Inputs[Lookup Input].Columns[ListingID]"
+                          cachedDataType="i4"
+                          cachedName="ListingID"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ListingID]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">Listing_AK</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      errorRowDisposition="IgnoreFailure"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Match Output].Columns[Listing_SK]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Match Output].Columns[Listing_SK]"
+                          name="Listing_SK"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">Listing_SK</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+                  description="OLE DB Destination"
+                  name="OLE DB Destination"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset">[dbo].[FactAgentSales]</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      connectionManagerRefId="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                      errorOrTruncationOperation="Insert"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="OLE DB Destination Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[ContactReason]"
+                          cachedDataType="wstr"
+                          cachedLength="15"
+                          cachedName="ContactReason"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ContactReason]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ContactReason]" />
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[BidPrice]"
+                          cachedDataType="cy"
+                          cachedName="BidPrice"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[BidPrice]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[BidPrice]" />
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[CommissionRate]"
+                          cachedDataType="numeric"
+                          cachedName="CommissionRate"
+                          cachedPrecision="4"
+                          cachedScale="4"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CommissionRate]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[CommissionRate]" />
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Date_SK]"
+                          cachedDataType="i4"
+                          cachedName="Date_SK"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Date_SK]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Match Output].Columns[Date_SK]" />
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Listing_SK]"
+                          cachedDataType="i4"
+                          cachedName="Listing_SK"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Listing_SK]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Match Output].Columns[Listing_SK]" />
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Property_SK]"
+                          cachedDataType="i4"
+                          cachedName="Property_SK"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Property_SK]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Match Output].Columns[Property_SK]" />
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Customer_SK]"
+                          cachedDataType="i4"
+                          cachedName="Customer_SK"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Customer_SK]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Match Output].Columns[Customer_SK]" />
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].Columns[Agent_SK]"
+                          cachedDataType="i4"
+                          cachedName="Agent_SK"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Agent_SK]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Match Output].Columns[Agent_SK]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Date_SK]"
+                          dataType="i4"
+                          name="Date_SK" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Listing_SK]"
+                          dataType="i4"
+                          name="Listing_SK" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Property_SK]"
+                          dataType="i4"
+                          name="Property_SK" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Customer_SK]"
+                          dataType="i4"
+                          name="Customer_SK" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[Agent_SK]"
+                          dataType="i4"
+                          name="Agent_SK" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[ContactReason]"
+                          dataType="wstr"
+                          length="10"
+                          name="ContactReason" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[BidPrice]"
+                          dataType="i4"
+                          name="BidPrice" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input].ExternalColumns[CommissionRate]"
+                          dataType="numeric"
+                          name="CommissionRate"
+                          precision="18" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Outputs[OLE DB Destination Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="OLE DB Destination Error Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+                  description="OLE DB Source"
+                  name="OLE DB Source 1"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the name of the database object used to open a rowset."
+                      name="OpenRowset"></property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the variable that contains the name of the database object used to open a rowset."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="The SQL command to be executed."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT Agent.AgentID, Customer.CustomerID, Listing.ListingID, Property.PropertyID, ContactReason.ContactReason, CustAgentList.BidPrice, CustAgentList.CommissionRate, Listing.BeginListDate, Listing.EndListDate, 
+                  CustAgentList.ContactDate
+FROM     ContactReason 
+
+INNER JOIN
+                  CustAgentList ON ContactReason.ContactReason = CustAgentList.ContactReason
+				   INNER JOIN
+                  Agent
+					ON CustAgentList.AgentID = Agent.AgentID
+				   INNER JOIN
+                  Listing ON Agent.AgentID = Listing.ListingAgentID 
+				  INNER JOIN
+                  Property ON Listing.PropertyID = Property.PropertyID 
+				  INNER JOIN
+                  Customer ON Property.OwnerID = Customer.CustomerID
+				   INNER JOIN
+                  SaleStatus ON Listing.SaleStatusID = SaleStatus.SaleStatusID</property>
+                    <property
+                      dataType="System.String"
+                      description="The variable that contains the SQL command to be executed."
+                      name="SqlCommandVariable"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Forces the use of the DefaultCodePage property value when describing character data."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the mode used to access the database."
+                      name="AccessMode"
+                      typeConverter="AccessMode">2</property>
+                    <property
+                      dataType="System.String"
+                      description="The mappings between the parameters in the SQL command and variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[LocalHost.Redwood]"
+                      connectionManagerRefId="Package.ConnectionManagers[LocalHost.Redwood]"
+                      description="The OLE DB runtime connection used to access the database."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output]"
+                      name="OLE DB Source Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[AgentID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[AgentID]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[AgentID]"
+                          name="AgentID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[CustomerID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[CustomerID]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[CustomerID]"
+                          name="CustomerID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ListingID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[ListingID]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ListingID]"
+                          name="ListingID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[PropertyID]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[PropertyID]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[PropertyID]"
+                          name="PropertyID"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ContactReason]"
+                          dataType="wstr"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[ContactReason]"
+                          length="15"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ContactReason]"
+                          name="ContactReason"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[BidPrice]"
+                          dataType="cy"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[BidPrice]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[BidPrice]"
+                          name="BidPrice"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[CommissionRate]"
+                          dataType="numeric"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[CommissionRate]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[CommissionRate]"
+                          name="CommissionRate"
+                          precision="4"
+                          scale="4"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[BeginListDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[BeginListDate]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[BeginListDate]"
+                          name="BeginListDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[EndListDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[EndListDate]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[EndListDate]"
+                          name="EndListDate"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ContactDate]"
+                          dataType="dbTimeStamp"
+                          errorOrTruncationOperation="Conversion"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[ContactDate]"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[ContactDate]"
+                          name="ContactDate"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[AgentID]"
+                          dataType="i4"
+                          name="AgentID" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[CustomerID]"
+                          dataType="i4"
+                          name="CustomerID" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[ListingID]"
+                          dataType="i4"
+                          name="ListingID" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[PropertyID]"
+                          dataType="i4"
+                          name="PropertyID" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[ContactReason]"
+                          dataType="wstr"
+                          length="15"
+                          name="ContactReason" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[BidPrice]"
+                          dataType="cy"
+                          name="BidPrice" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[CommissionRate]"
+                          dataType="numeric"
+                          name="CommissionRate"
+                          precision="4"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[BeginListDate]"
+                          dataType="dbTimeStamp"
+                          name="BeginListDate" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[EndListDate]"
+                          dataType="dbTimeStamp"
+                          name="EndListDate" />
+                        <externalMetadataColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].ExternalColumns[ContactDate]"
+                          dataType="dbTimeStamp"
+                          name="ContactDate" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output]"
+                      isErrorOut="true"
+                      name="OLE DB Source Error Output">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[AgentID]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[AgentID]"
+                          name="AgentID" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[CustomerID]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[CustomerID]"
+                          name="CustomerID" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ListingID]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ListingID]"
+                          name="ListingID" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[PropertyID]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[PropertyID]"
+                          name="PropertyID" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ContactReason]"
+                          dataType="wstr"
+                          length="15"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ContactReason]"
+                          name="ContactReason" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[BidPrice]"
+                          dataType="cy"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[BidPrice]"
+                          name="BidPrice" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[CommissionRate]"
+                          dataType="numeric"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[CommissionRate]"
+                          name="CommissionRate"
+                          precision="4"
+                          scale="4" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[BeginListDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[BeginListDate]"
+                          name="BeginListDate" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[EndListDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[EndListDate]"
+                          name="EndListDate" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ContactDate]"
+                          dataType="dbTimeStamp"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ContactDate]"
+                          name="ContactDate" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Load Fact Table\Load FactAgentSales\PropertySK"
+                  componentClassID="Microsoft.Lookup"
+                  contactInfo="Lookup;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;6"
+                  description="Joins additional columns to the data flow by looking up values in a table. For example, join to the 'employee id' column the employees table to get 'hire date' and 'employee name'. We recommend this transformation when the lookup table can fit into memory."
+                  name="PropertySK"
+                  usesDispositions="true"
+                  version="6">
+                  <properties>
+                    <property
+                      dataType="System.String"
+                      description="Specifies the SQL statement that generates the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT Property_SK, Property_AK
+FROM DimProperty</property>
+                    <property
+                      dataType="System.String"
+                      description="Specifies a SQL statement that uses parameters to generate the lookup table."
+                      expressionType="Notify"
+                      name="SqlCommandParam"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (SELECT Property_SK, Property_AK
+FROM DimProperty) [refTable]
+where [refTable].[Property_AK] = ?</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the type of connection used to access the reference dataset."
+                      name="ConnectionType"
+                      typeConverter="LookupConnectionType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the cache type of the lookup table."
+                      name="CacheType"
+                      typeConverter="CacheType">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies how the Lookup transformation handles rows without matching entries in the reference data set."
+                      name="NoMatchBehavior"
+                      typeConverter="LookupNoMatchBehavior">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the percentage of the cache that is allocated for rows with no matching entries in the reference dataset."
+                      name="NoMatchCachePercentage">0</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Maximum Memory Usage for Reference Cache on a 32 bit platform."
+                      name="MaxMemoryUsage">25</property>
+                    <property
+                      dataType="System.Int64"
+                      description="Maximum Memory Usage for Reference Cache on a 64 bit platform."
+                      name="MaxMemoryUsage64">25</property>
+                    <property
+                      dataType="System.String"
+                      description="Indicates whether to reference metadata in an XML format."
+                      name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="Property_SK" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Property_AK" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                    <property
+                      containsID="true"
+                      dataType="System.String"
+                      description="Specifies the list of lineage identifiers that map to the parameters that the SQL statement in the SQLCommand property uses. Entries in the list are separated by semicolons."
+                      name="ParameterMap">#{Package\Load Fact Table\Load FactAgentSales\248:invalid};</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Specifies the column code page to use when code page information is unavailable from the data source."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Determines whether duplicate keys in the reference data should be treated as errors when full cache mode is used."
+                      name="TreatDuplicateKeysAsError">false</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Connections[OleDbConnection]"
+                      connectionManagerID="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      connectionManagerRefId="Package.ConnectionManagers[LocalHost.DWAgentSales]"
+                      description="Connection manager used to access lookup data."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Inputs[Lookup Input]"
+                      name="Lookup Input">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Inputs[Lookup Input].Columns[PropertyID]"
+                          cachedDataType="i4"
+                          cachedName="PropertyID"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output].Columns[PropertyID]">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table that a column joins."
+                              name="JoinToReferenceColumn">Property_AK</property>
+                            <property
+                              dataType="System.Null"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn" />
+                          </properties>
+                        </inputColumn>
+                      </inputColumns>
+                      <externalMetadataColumns />
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Match Output]"
+                      errorOrTruncationOperation="Lookup"
+                      errorRowDisposition="IgnoreFailure"
+                      exclusionGroup="1"
+                      name="Lookup Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Match Output].Columns[Property_SK]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Copy Column"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Match Output].Columns[Property_SK]"
+                          name="Property_SK"
+                          truncationRowDisposition="FailComponent">
+                          <properties>
+                            <property
+                              dataType="System.String"
+                              description="Specifies the column in the reference table from which a column is copied."
+                              name="CopyFromReferenceColumn">Property_SK</property>
+                          </properties>
+                        </outputColumn>
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup No Match Output]"
+                      description="The Lookup output that handles rows with no matching entries in the reference dataset. Use this output when the NoMatchBehavior property is set to &quot;Send rows with no matching entries to the no match output.&quot;"
+                      exclusionGroup="1"
+                      name="Lookup No Match Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Inputs[Lookup Input]">
+                      <externalMetadataColumns />
+                    </output>
+                    <output
+                      refId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Error Output]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Lookup Error Output"
+                      synchronousInputId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Inputs[Lookup Input]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Error Output].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Error Output].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output]"
+                  endId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Inputs[Lookup Input]"
+                  name="Lookup Match Output"
+                  startId="Package\Load Fact Table\Load FactAgentSales\DateSK.Outputs[Lookup Match Output]" />
+                <path
+                  refId="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output1]"
+                  endId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Inputs[Lookup Input]"
+                  name="Lookup Match Output"
+                  startId="Package\Load Fact Table\Load FactAgentSales\Lisitng SK.Outputs[Lookup Match Output]" />
+                <path
+                  refId="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output2]"
+                  endId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Inputs[Lookup Input]"
+                  name="Lookup Match Output"
+                  startId="Package\Load Fact Table\Load FactAgentSales\PropertySK.Outputs[Lookup Match Output]" />
+                <path
+                  refId="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output3]"
+                  endId="Package\Load Fact Table\Load FactAgentSales\Agent.Inputs[Lookup Input]"
+                  name="Lookup Match Output"
+                  startId="Package\Load Fact Table\Load FactAgentSales\CustomerSK.Outputs[Lookup Match Output]" />
+                <path
+                  refId="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output4]"
+                  endId="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination.Inputs[OLE DB Destination Input]"
+                  name="Lookup Match Output"
+                  startId="Package\Load Fact Table\Load FactAgentSales\Agent.Outputs[Lookup Match Output]" />
+                <path
+                  refId="Package\Load Fact Table\Load FactAgentSales.Paths[OLE DB Source Output]"
+                  endId="Package\Load Fact Table\Load FactAgentSales\DateSK.Inputs[Lookup Input]"
+                  name="OLE DB Source Output"
+                  startId="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1.Outputs[OLE DB Source Output]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
     </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Prepare ETL"
@@ -1697,7 +3053,7 @@ FROM            Property</property>
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
               SQLTask:Connection="{6588D82C-9734-4BC0-AE69-DA2C35C9F73B}"
-              SQLTask:SqlStatementSource="-- DWAgentSales developed and written by David Bray, Jordan Crist, Jason Carlson, and Maddy Mann&#xA;--Created on October 10th, 2017&#xA;&#xA;USE [master]&#xA;GO&#xA;IF NOT EXISTS(SELECT * FROM sys.databases&#xA;&#x9;WHERE name = N'DWAgentSales')&#xA;&#x9;CREATE DATABASE DWAgentSales&#xA;GO&#xA;USE DWAgentSales&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'FactAgentSales'&#xA;       )&#xA;&#x9;DROP TABLE FactAgentSales;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimCustomer'&#xA;       )&#xA;&#x9;DROP TABLE DimCustomer;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimAgent'&#xA;       )&#xA;&#x9;DROP TABLE DimAgent;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimListing'&#xA;       )&#xA;&#x9;DROP TABLE DimListing;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimProperty'&#xA;      )&#xA;&#x9;DROP TABLE DimProperty;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimDate'&#xA;      )&#xA;&#x9;DROP TABLE DimDate;&#xA;&#xA;--CREATE TABLE SECTION&#xA;&#xA;CREATE TABLE DimCustomer&#xA;&#x9;(Customer_SK INT IDENTITY(1,1) CONSTRAINT pk_Customer PRIMARY KEY,&#xA;Customer_AK INT NOT NULL,&#xA;&#x9;City NVarchar(20) NOT NULL,&#xA;&#x9;[State] nvarchar(2) NOT NULL,&#xA;&#x9;Zipcode nvarchar(10) NOT NULL&#xA;&#x9;);&#xA;&#xA;CREATE TABLE DimAgent&#xA;&#x9;(Agent_SK&#x9;INT IDENTITY(1,1) CONSTRAINT pk_Agent PRIMARY KEY,&#xA;&#x9;Agent_AK&#x9;INT NOT NULL,&#xA;&#x9;BirthDate Datetime NOT NULL,&#xA;&#x9;Gender Nchar(1) NOT NULL,&#xA;&#x9;HireDate Datetime NOT NULL,&#xA;&#x9;LicenseDate Datetime NOT NULL&#xA;&#x9;);&#xA;&#x9;&#xA;&#x9;CREATE TABLE DimListing&#xA;&#x9;(Listing_SK INT IDENTITY(1,1) CONSTRAINT pk_listing PRIMARY KEY,&#xA;Listing_AK INT NOT NULL,&#xA;&#x9; SaleStatus NVARCHAR(10),&#xA;&#x9; AskingPrice    MONEY NOT NULL&#xA;&#x9;);&#xA;&#xA;&#x9;CREATE TABLE DimProperty&#xA;&#x9;(Property_SK INT IDENTITY(1,1) CONSTRAINT pk_property PRIMARY KEY,&#xA;Property_AK INT NOT NULL,&#xA;&#x9;Address     NVARCHAR(30) NOT NULL,&#xA;&#x9;City&#x9;     NVARCHAR(30) NOT NULL,&#xA;&#x9;State&#x9;     NVARCHAR(20) NOT NULL,&#xA;&#x9;Zipcode     NVARCHAR(20) NOT NULL,&#xA;&#x9;Bedrooms    INT,&#xA;&#x9;Bathrooms   INT,&#xA;&#x9;Stories     INT,&#xA;&#x9;SqFt&#x9;     INT,&#xA;&#x9;YearBuilt   NUMERIC(4),&#xA;&#x9;Zone&#x9;     NVARCHAR(4)&#xA;&#x9;);&#xA;&#xA;CREATE TABLE [dbo].[DimDate]&#xA;&#x9;(&#x9;&#xA;&#x9;&#x9;Date_SK INT PRIMARY KEY, &#xA;&#x9;&#x9;Date DATETIME,&#xA;&#x9;&#x9;FullDate CHAR(10),-- Date in MM-dd-yyyy format&#xA;&#x9;&#x9;DayOfMonth INT, -- Field will hold day number of Month&#xA;&#x9;&#x9;DayName VARCHAR(9), -- Contains name of the day, Sunday, Monday &#xA;&#x9;&#x9;DayOfWeek INT,-- First Day Sunday=1 and Saturday=7&#xA;&#x9;&#x9;DayOfWeekInMonth INT, -- 1st Monday or 2nd Monday in Month&#xA;&#x9;&#x9;DayOfWeekInYear INT,&#xA;&#x9;&#x9;DayOfQuarter INT,&#xA;&#x9;&#x9;DayOfYear INT,&#xA;&#x9;&#x9;WeekOfMonth INT,-- Week Number of Month &#xA;&#x9;&#x9;WeekOfQuarter INT, -- Week Number of the Quarter&#xA;&#x9;&#x9;WeekOfYear INT,-- Week Number of the Year&#xA;&#x9;&#x9;Month INT, -- Number of the Month 1 to 12{}&#xA;&#x9;&#x9;MonthName VARCHAR(9),-- January, February etc&#xA;&#x9;&#x9;MonthOfQuarter INT,-- Month Number belongs to Quarter&#xA;&#x9;&#x9;Quarter CHAR(2),&#xA;&#x9;&#x9;QuarterName VARCHAR(9),-- First,Second..&#xA;&#x9;&#x9;Year INT,-- Year value of Date stored in Row&#xA;&#x9;&#x9;YearName CHAR(7), -- CY 2015,CY 2016&#xA;&#x9;&#x9;MonthYear CHAR(10), -- Jan-2016,Feb-2016&#xA;&#x9;&#x9;MMYYYY INT,&#xA;&#x9;&#x9;FirstDayOfMonth DATE,&#xA;&#x9;&#x9;LastDayOfMonth DATE,&#xA;&#x9;&#x9;FirstDayOfQuarter DATE,&#xA;&#x9;&#x9;LastDayOfQuarter DATE,&#xA;&#x9;&#x9;FirstDayOfYear DATE,&#xA;&#x9;&#x9;LastDayOfYear DATE,&#xA;&#x9;&#x9;IsHoliday BIT,-- Flag 1=National Holiday, 0-No National Holiday&#xA;&#x9;&#x9;IsWeekday BIT,-- 0=Week End ,1=Week Day&#xA;&#x9;&#x9;Holiday VARCHAR(50),--Name of Holiday in US&#xA;&#x9;&#x9;Season VARCHAR(10)--Name of Season&#xA;&#x9;);&#xA;&#xA;&#xA;&#x9;&#xA;&#xA;CREATE TABLE [dbo].FactAgentSales(&#xA;&#x9;[Date_SK] INT CONSTRAINT  fk_Date FOREIGN KEY REFERENCES DimDate (Date_SK),&#xA;&#x9;[Listing_SK] INT CONSTRAINT  fk_Listing FOREIGN KEY REFERENCES DimListing (Listing_SK),&#xA;&#x9;[Property_SK] INT CONSTRAINT  fk_Property FOREIGN KEY REFERENCES DimProperty (Property_SK),&#xA;&#x9;[Customer_SK] INT CONSTRAINT  fk_Customer FOREIGN KEY REFERENCES     DimCustomer(Customer_SK),&#xA;&#x9;[Agent_SK] INT CONSTRAINT  fk_Agent FOREIGN KEY REFERENCES DimAgent (Agent_SK),&#xA;&#x9;[ContactReason] INT NOT NULL,&#xA;&#x9;[BidPrice] INT NOT NULL,&#xA;&#x9;[CommissionRate] DECIMAL NOT NULL,&#xA;&#x9;[TimeOnMarket] INT NOT NULL&#xA;);&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              SQLTask:SqlStatementSource="-- DWAgentSales developed and written by David Bray, Jordan Crist, Jason Carlson, and Maddy Mann&#xA;--Created on October 10th, 2017&#xA;&#xA;USE [master]&#xA;GO&#xA;IF NOT EXISTS(SELECT * FROM sys.databases&#xA;&#x9;WHERE name = N'DWAgentSales')&#xA;&#x9;CREATE DATABASE DWAgentSales&#xA;GO&#xA;USE DWAgentSales&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'FactAgentSales'&#xA;       )&#xA;&#x9;DROP TABLE FactAgentSales;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimCustomer'&#xA;       )&#xA;&#x9;DROP TABLE DimCustomer;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimAgent'&#xA;       )&#xA;&#x9;DROP TABLE DimAgent;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimListing'&#xA;       )&#xA;&#x9;DROP TABLE DimListing;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimProperty'&#xA;      )&#xA;&#x9;DROP TABLE DimProperty;&#xA;&#xA;IF EXISTS(&#xA;&#x9;SELECT *&#xA;&#x9;FROM sys.tables&#xA;&#x9;WHERE name = N'DimDate'&#xA;      )&#xA;&#x9;DROP TABLE DimDate;&#xA;&#xA;--CREATE TABLE SECTION&#xA;&#xA;CREATE TABLE DimCustomer&#xA;&#x9;(Customer_SK INT IDENTITY(1,1) CONSTRAINT pk_Customer PRIMARY KEY,&#xA;Customer_AK INT NOT NULL,&#xA;&#x9;City NVarchar(20) NOT NULL,&#xA;&#x9;[State] nvarchar(2) NOT NULL,&#xA;&#x9;Zipcode nvarchar(10) NOT NULL&#xA;&#x9;);&#xA;&#xA;CREATE TABLE DimAgent&#xA;&#x9;(Agent_SK&#x9;INT IDENTITY(1,1) CONSTRAINT pk_Agent PRIMARY KEY,&#xA;&#x9;Agent_AK&#x9;INT NOT NULL,&#xA;&#x9;BirthDate Datetime NOT NULL,&#xA;&#x9;Gender Nchar(1) NOT NULL,&#xA;&#x9;HireDate Datetime NOT NULL,&#xA;&#x9;LicenseDate Datetime NOT NULL&#xA;&#x9;);&#xA;&#x9;&#xA;&#x9;CREATE TABLE DimListing&#xA;&#x9;(Listing_SK INT IDENTITY(1,1) CONSTRAINT pk_listing PRIMARY KEY,&#xA;Listing_AK INT NOT NULL,&#xA;&#x9; SaleStatus NVARCHAR(10),&#xA;&#x9; AskingPrice    MONEY NOT NULL&#xA;&#x9;);&#xA;&#xA;&#x9;CREATE TABLE DimProperty&#xA;&#x9;(Property_SK INT IDENTITY(1,1) CONSTRAINT pk_property PRIMARY KEY,&#xA;Property_AK INT NOT NULL,&#xA;&#x9;Address     NVARCHAR(30) NOT NULL,&#xA;&#x9;City&#x9;     NVARCHAR(30) NOT NULL,&#xA;&#x9;State&#x9;     NVARCHAR(20) NOT NULL,&#xA;&#x9;Zipcode     NVARCHAR(20) NOT NULL,&#xA;&#x9;Bedrooms    INT,&#xA;&#x9;Bathrooms   INT,&#xA;&#x9;Stories     INT,&#xA;&#x9;SqFt&#x9;     INT,&#xA;&#x9;YearBuilt   NUMERIC(4),&#xA;&#x9;Zone&#x9;     NVARCHAR(4)&#xA;&#x9;);&#xA;&#xA;CREATE TABLE [dbo].[DimDate]&#xA;&#x9;(&#x9;&#xA;&#x9;&#x9;Date_SK INT PRIMARY KEY, &#xA;&#x9;&#x9;Date DATETIME,&#xA;&#x9;&#x9;FullDate CHAR(10),-- Date in MM-dd-yyyy format&#xA;&#x9;&#x9;DayOfMonth INT, -- Field will hold day number of Month&#xA;&#x9;&#x9;DayName VARCHAR(9), -- Contains name of the day, Sunday, Monday &#xA;&#x9;&#x9;DayOfWeek INT,-- First Day Sunday=1 and Saturday=7&#xA;&#x9;&#x9;DayOfWeekInMonth INT, -- 1st Monday or 2nd Monday in Month&#xA;&#x9;&#x9;DayOfWeekInYear INT,&#xA;&#x9;&#x9;DayOfQuarter INT,&#xA;&#x9;&#x9;DayOfYear INT,&#xA;&#x9;&#x9;WeekOfMonth INT,-- Week Number of Month &#xA;&#x9;&#x9;WeekOfQuarter INT, -- Week Number of the Quarter&#xA;&#x9;&#x9;WeekOfYear INT,-- Week Number of the Year&#xA;&#x9;&#x9;Month INT, -- Number of the Month 1 to 12{}&#xA;&#x9;&#x9;MonthName VARCHAR(9),-- January, February etc&#xA;&#x9;&#x9;MonthOfQuarter INT,-- Month Number belongs to Quarter&#xA;&#x9;&#x9;Quarter CHAR(2),&#xA;&#x9;&#x9;QuarterName VARCHAR(9),-- First,Second..&#xA;&#x9;&#x9;Year INT,-- Year value of Date stored in Row&#xA;&#x9;&#x9;YearName CHAR(7), -- CY 2015,CY 2016&#xA;&#x9;&#x9;MonthYear CHAR(10), -- Jan-2016,Feb-2016&#xA;&#x9;&#x9;MMYYYY INT,&#xA;&#x9;&#x9;FirstDayOfMonth DATE,&#xA;&#x9;&#x9;LastDayOfMonth DATE,&#xA;&#x9;&#x9;FirstDayOfQuarter DATE,&#xA;&#x9;&#x9;LastDayOfQuarter DATE,&#xA;&#x9;&#x9;FirstDayOfYear DATE,&#xA;&#x9;&#x9;LastDayOfYear DATE,&#xA;&#x9;&#x9;IsHoliday BIT,-- Flag 1=National Holiday, 0-No National Holiday&#xA;&#x9;&#x9;IsWeekday BIT,-- 0=Week End ,1=Week Day&#xA;&#x9;&#x9;Holiday VARCHAR(50),--Name of Holiday in US&#xA;&#x9;&#x9;Season VARCHAR(10)--Name of Season&#xA;&#x9;);&#xA;&#xA;&#xA;&#x9;&#xA;&#xA;CREATE TABLE [dbo].FactAgentSales(&#xA;&#x9;[Date_SK] INT CONSTRAINT  fk_Date FOREIGN KEY REFERENCES DimDate (Date_SK),&#xA;&#x9;[Listing_SK] INT CONSTRAINT  fk_Listing FOREIGN KEY REFERENCES DimListing (Listing_SK),&#xA;&#x9;[Property_SK] INT CONSTRAINT  fk_Property FOREIGN KEY REFERENCES DimProperty (Property_SK),&#xA;&#x9;[Customer_SK] INT CONSTRAINT  fk_Customer FOREIGN KEY REFERENCES     DimCustomer(Customer_SK),&#xA;&#x9;[Agent_SK] INT CONSTRAINT  fk_Agent FOREIGN KEY REFERENCES DimAgent (Agent_SK),&#xA;&#x9;[ContactReason] NVARCHAR(10) NOT NULL,&#xA;&#x9;[BidPrice] INT,&#xA;&#x9;[CommissionRate] DECIMAL NOT NULL,&#xA;&#x9;--[TimeOnMarket] DATETIME NOT NULL&#xA;);&#xA;&#xA;&#xA;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
       </DTS:Executables>
@@ -1712,6 +3068,14 @@ FROM            Property</property>
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
       DTS:To="Package\Load Dim Tables" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{4DB45F90-38E5-43AD-9A42-E0EAD21D3936}"
+      DTS:From="Package\Load Dim Tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Load Fact Table" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -1726,46 +3090,46 @@ FROM            Property</property>
       <GraphLayout
         Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
-          Size="149,42"
-          Id="Package\Load Dim Tables\Load Dim Date"
-          TopLeft="38,14" />
-        <NodeLayout
-          Size="151,42"
+          Size="151.2,41.6"
           Id="Package\Load Dim Tables\Load DimAgent"
           TopLeft="39,247" />
         <NodeLayout
-          Size="168,42"
+          Size="168,41.6"
           Id="Package\Load Dim Tables\Load DimCustomer"
           TopLeft="27,181" />
         <NodeLayout
-          Size="154,42"
+          Size="144.8,41.6"
+          Id="Package\Load Dim Tables\Load DimDate"
+          TopLeft="38,14" />
+        <NodeLayout
+          Size="153.6,41.6"
           Id="Package\Load Dim Tables\Load DimListing"
           TopLeft="37,106" />
         <NodeLayout
-          Size="163,42"
+          Size="163.2,41.6"
           Id="Package\Load Dim Tables\Load DimProperty"
           TopLeft="40,323" />
         <EdgeLayout
           Id="Package\Load Dim Tables.PrecedenceConstraints[Constraint]"
-          TopLeft="113.25,56">
+          TopLeft="112.2,55.6">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,50"
+              EndConnector="0,50.4"
               Start="0,0"
-              End="0,42.5">
+              End="0,42.9">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,42.5" />
+                    End="0,42.9" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-17.9932421875,16.47314453125,35.986484375,9.5537109375"
+              BoundingBox="-17.9932421875,16.67314453125,35.986484375,9.5537109375"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -1844,26 +3208,30 @@ FROM            Property</property>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="245,415"
-          Size="245,458"
+          PanelSize="244.8,415.2"
+          Size="244.8,458.4"
           Id="Package\Load Dim Tables"
           TopLeft="67,298" />
+        <NodeLayout
+          Size="176,41.6"
+          Id="Package\Load Fact Table\Load FactAgentSales"
+          TopLeft="37.1384817687724,23.3818402962916" />
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="205,55"
-          Size="205,98"
+          PanelSize="233.6,119.2"
+          Size="233.6,162.4"
           Id="Package\Load Fact Table"
-          TopLeft="469,130" />
+          TopLeft="473.615384784676,439.636374821676" />
         <NodeLayout
-          Size="121,42"
+          Size="120.8,41.6"
           Id="Package\Prepare ETL\Build DM"
           TopLeft="31,22" />
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="186,92"
-          Size="186,135"
+          PanelSize="185.6,92"
+          Size="185.6,135.2"
           Id="Package\Prepare ETL"
           TopLeft="75,41" />
         <EdgeLayout
@@ -1902,6 +3270,30 @@ FROM            Property</property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="311.8,524.018187410838">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="161.815384784676,0"
+              Start="0,0"
+              End="154.315384784676,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="154.315384784676,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="59.164450204838,5,35.986484375,9.5537109375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
       </GraphLayout>
     </LayoutInfo>
   </Package>
@@ -1909,7 +3301,7 @@ FROM            Property</property>
     design-time-name="Package\Load Dim Tables\Load DimAgent">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="150,42"
           Id="Package\Load Dim Tables\Load DimAgent\OLE DB Source"
@@ -1937,7 +3329,9 @@ FROM            Property</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -1970,27 +3364,39 @@ FROM            Property</property>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="150,42"
-          Id="Package\Load Dim Tables\Load DimCustomer\OLE DB Source"
-          TopLeft="304,115" />
-        <NodeLayout
-          Size="171,42"
+          Size="171.2,41.6"
           Id="Package\Load Dim Tables\Load DimCustomer\OLE DB Destination"
           TopLeft="300,203" />
+        <NodeLayout
+          Size="150.4,41.6"
+          Id="Package\Load Dim Tables\Load DimCustomer\OLE DB Source"
+          TopLeft="302.4,115" />
         <EdgeLayout
           Id="Package\Load Dim Tables\Load DimCustomer.Paths[OLE DB Source Output]"
-          TopLeft="382.25,157">
+          TopLeft="377.6,156.6">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,46"
+              EndConnector="8,46.4"
               Start="0,0"
-              End="0,38.5">
+              End="8,38.9">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,38.5" />
+                    End="0,19.2" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.2"
+                    Point2="0,23.2"
+                    Point3="4,23.2" />
+                  <mssgle:LineSegment
+                    End="4,23.2" />
+                  <mssgle:CubicBezierSegment
+                    Point1="4,23.2"
+                    Point2="8,23.2"
+                    Point3="8,27.2" />
+                  <mssgle:LineSegment
+                    End="8,38.9" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2029,27 +3435,27 @@ FROM            Property</property>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="150,44"
+          Size="150.4,44"
           Id="Package\Load Dim Tables\Load DimListing\OLE DB Source"
           TopLeft="315,49" />
         <NodeLayout
-          Size="171,42"
+          Size="171.2,41.6"
           Id="Package\Load Dim Tables\Load DimListing\OLE DB Destination"
-          TopLeft="302,158" />
+          TopLeft="302,157.388235285538" />
         <EdgeLayout
           Id="Package\Load Dim Tables\Load DimListing.Paths[OLE DB Source Output]"
-          TopLeft="388.75,93">
+          TopLeft="388.9,93">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,65"
+              EndConnector="0,64.3882352855379"
               Start="0,0"
-              End="0,57.5">
+              End="0,56.8882352855379">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,57.5" />
+                    End="0,56.8882352855379" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2061,6 +3467,19 @@ FROM            Property</property>
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Dim Tables\Load DimListing\OLE DB Destination">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
   <PipelineComponentMetadata
     design-time-name="Package\Load Dim Tables\Load DimListing\OLE DB Source">
     <Properties>
@@ -2075,39 +3494,39 @@ FROM            Property</property>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="150,42"
+          Size="150.4,41.6"
           Id="Package\Load Dim Tables\Load DimProperty\OLE DB Source"
-          TopLeft="236,122" />
+          TopLeft="236,122.8" />
         <NodeLayout
-          Size="171,42"
+          Size="171.2,41.6"
           Id="Package\Load Dim Tables\Load DimProperty\OLE DB Destination"
           TopLeft="237,205" />
         <EdgeLayout
           Id="Package\Load Dim Tables\Load DimProperty.Paths[OLE DB Source Output]"
-          TopLeft="311,164">
+          TopLeft="311.2,164.4">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="11.5,41"
+              EndConnector="11.4,40.6"
               Start="0,0"
-              End="11.5,33.5">
+              End="11.4,33.1">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,16.5" />
+                    End="0,16.3" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,16.5"
-                    Point2="0,20.5"
-                    Point3="4,20.5" />
+                    Point1="0,16.3"
+                    Point2="0,20.3"
+                    Point3="4,20.3" />
                   <mssgle:LineSegment
-                    End="7.5,20.5" />
+                    End="7.40000000000003,20.3" />
                   <mssgle:CubicBezierSegment
-                    Point1="7.5,20.5"
-                    Point2="11.5,20.5"
-                    Point3="11.5,24.5" />
+                    Point1="7.40000000000003,20.3"
+                    Point2="11.4,20.3"
+                    Point3="11.4,24.3" />
                   <mssgle:LineSegment
-                    End="11.5,33.5" />
+                    End="11.4,33.1" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2140,8 +3559,309 @@ FROM            Property</property>
       </Property>
     </Properties>
   </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Load Fact Table\Load FactAgentSales">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="112.8,41.6"
+          Id="Package\Load Fact Table\Load FactAgentSales\DateSK"
+          TopLeft="439.2,128.8" />
+        <NodeLayout
+          Size="124,41.6"
+          Id="Package\Load Fact Table\Load FactAgentSales\Lisitng SK"
+          TopLeft="434.4,199.2" />
+        <EdgeLayout
+          Id="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output]"
+          TopLeft="496,170.4">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,28.8"
+              Start="0,0"
+              End="0,21.3">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,21.3" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,4.84531249999999,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="130.4,41.6"
+          Id="Package\Load Fact Table\Load FactAgentSales\PropertySK"
+          TopLeft="433.6,283.2" />
+        <EdgeLayout
+          Id="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output1]"
+          TopLeft="497.6,240.8">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.4"
+              Start="0,0"
+              End="0,34.9">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.9" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,11.6453125,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="135.2,41.6"
+          Id="Package\Load Fact Table\Load FactAgentSales\CustomerSK"
+          TopLeft="429.6,352.8" />
+        <EdgeLayout
+          Id="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output2]"
+          TopLeft="498,324.8">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,28"
+              Start="0,0"
+              End="0,20.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,4.4453125,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="105.6,41.6"
+          Id="Package\Load Fact Table\Load FactAgentSales\Agent"
+          TopLeft="449.6,436" />
+        <EdgeLayout
+          Id="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output3]"
+          TopLeft="499.8,394.4">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.6"
+              Start="0,0"
+              End="0,34.1">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.1" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,11.2453125,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="158.4,41.6"
+          Id="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1"
+          TopLeft="419.2,40.8" />
+        <EdgeLayout
+          Id="Package\Load Fact Table\Load FactAgentSales.Paths[OLE DB Source Output]"
+          TopLeft="497,82.4">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.4"
+              Start="0,0"
+              End="0,38.9">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.9" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination"
+          TopLeft="417.6,509.6" />
+        <EdgeLayout
+          Id="Package\Load Fact Table\Load FactAgentSales.Paths[Lookup Match Output4]"
+          TopLeft="502.6,477.6">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31.9999999999999"
+              Start="0,0"
+              End="0,24.4999999999999">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,24.4999999999999" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-48.19138671875,6.44531249999997,96.3827734375,11.609375"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
   <PipelineComponentMetadata
-    design-time-name="Package\Load Dim Tables\Load DimListing\OLE DB Destination">
+    design-time-name="Package\Load Fact Table\Load FactAgentSales\DateSK">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact Table\Load FactAgentSales\Lisitng SK">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact Table\Load FactAgentSales\PropertySK">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact Table\Load FactAgentSales\CustomerSK">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact Table\Load FactAgentSales\Agent">
+    <Properties>
+      <Property>
+        <Name>OverwriteParamsSQLProp</Name>
+        <Value
+          type="q2:boolean">false</Value>
+      </Property>
+      <Property>
+        <Name>UsedTableName</Name>
+        <Value
+          type="q3:string"></Value>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q4:int">0</Value>
+      </Property>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact Table\Load FactAgentSales\OLE DB Source 1">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Load Fact Table\Load FactAgentSales\OLE DB Destination">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
