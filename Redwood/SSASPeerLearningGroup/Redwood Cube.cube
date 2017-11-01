@@ -8,7 +8,7 @@
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramLayout</Name>
       <Value>
         <dds xmlns="">
-          <diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="MSDDS.Rectilinear" defaultlineroute="MSDDS.Rectilinear" version="7" nextobject="24" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="-7639" scrolltop="0" gridx="150" gridy="150" marginx="5000" marginy="5000" zoom="80" x="23982" y="7705" backcolor="16777215" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="0" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="1" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}">
+          <diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="MSDDS.Rectilinear" defaultlineroute="MSDDS.Rectilinear" version="7" nextobject="24" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="-7639" scrolltop="9592" gridx="150" gridy="150" marginx="5000" marginy="5000" zoom="80" x="23326" y="8509" backcolor="16777215" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="0" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="1" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}">
             <font>
               <ddsxmlobjectstreamwrapper binary="010000009001b0300100065461686f6d61" />
             </font>
@@ -202,7 +202,7 @@
     </Annotation>
     <Annotation>
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramViewPortTop</Name>
-      <Value>0</Value>
+      <Value>9592</Value>
     </Annotation>
     <Annotation>
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramBoundingLeft</Name>
@@ -249,10 +249,24 @@
       <Name>Dim Date</Name>
       <DimensionID>Dim Date</DimensionID>
       <Attributes>
-        <Attribute dwd:design-time-name="513d1160-14b7-468d-a6c0-d4f4cf0ba65d">
-          <AttributeID>Date SK</AttributeID>
+        <Attribute dwd:design-time-name="c7ded767-e9de-48a2-b83f-bee9fbc85555">
+          <AttributeID>Date</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="0d68a985-a2d1-49ee-923e-48c93fcd645f">
+          <AttributeID>Year</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="5899e068-1036-4a01-bffc-16d3fee25b74">
+          <AttributeID>Quarter</AttributeID>
+        </Attribute>
+        <Attribute dwd:design-time-name="23bfcbe8-4080-4419-84e3-677ebaa1d3e2">
+          <AttributeID>Month Name</AttributeID>
         </Attribute>
       </Attributes>
+      <Hierarchies>
+        <Hierarchy dwd:design-time-name="9bcb3ffc-768c-4ab1-b9ab-b1182ff42833">
+          <HierarchyID>Hierarchy</HierarchyID>
+        </Hierarchy>
+      </Hierarchies>
     </Dimension>
     <Dimension dwd:design-time-name="c0ead7b1-e374-4fa8-8ba0-bf284989a3b4">
       <ID>Dim Listing</ID>
@@ -411,22 +425,6 @@
         </Dimension>
         <Dimension xsi:type="RegularMeasureGroupDimension" dwd:design-time-name="45e37e8d-1a6d-467a-b70f-c416ce07cc66">
           <CubeDimensionID>Dim Date</CubeDimensionID>
-          <Attributes>
-            <Attribute dwd:design-time-name="1b5f1e42-f68c-4303-a036-532549108e89">
-              <AttributeID>Date SK</AttributeID>
-              <KeyColumns>
-                <KeyColumn dwd:design-time-name="de1cfac8-0e08-492d-8435-5dffc228230f">
-                  <DataType>Integer</DataType>
-                  <NullProcessing>UnknownMember</NullProcessing>
-                  <Source xsi:type="ColumnBinding" dwd:design-time-name="bcbe6364-faae-4791-99b0-98b0f22f78a2">
-                    <TableID>dbo_FactAgentSales</TableID>
-                    <ColumnID>Date_SK</ColumnID>
-                  </Source>
-                </KeyColumn>
-              </KeyColumns>
-              <Type>Granularity</Type>
-            </Attribute>
-          </Attributes>
         </Dimension>
       </Dimensions>
       <Partitions />
