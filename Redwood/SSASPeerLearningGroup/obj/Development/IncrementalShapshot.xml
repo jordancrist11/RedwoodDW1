@@ -1,0 +1,89 @@
+﻿<DeploymentSnapshot xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ddl2="http://schemas.microsoft.com/analysisservices/2003/engine/2" xmlns:ddl2_2="http://schemas.microsoft.com/analysisservices/2003/engine/2/2" xmlns:ddl100_100="http://schemas.microsoft.com/analysisservices/2008/engine/100/100" xmlns:ddl200="http://schemas.microsoft.com/analysisservices/2010/engine/200" xmlns:ddl200_200="http://schemas.microsoft.com/analysisservices/2010/engine/200/200" xmlns:ddl300="http://schemas.microsoft.com/analysisservices/2011/engine/300" xmlns:ddl300_300="http://schemas.microsoft.com/analysisservices/2011/engine/300/300" xmlns:ddl400="http://schemas.microsoft.com/analysisservices/2012/engine/400" xmlns:ddl400_400="http://schemas.microsoft.com/analysisservices/2012/engine/400/400" xmlns:ddl500="http://schemas.microsoft.com/analysisservices/2013/engine/500" xmlns:ddl500_500="http://schemas.microsoft.com/analysisservices/2013/engine/500/500" xmlns:dwd="http://schemas.microsoft.com/DataWarehouse/Designer/1.0">
+  <Target>
+    <Database>SSASPeerLearningGroup</Database>
+    <Server>localhost</Server>
+    <ConnectionString>Data Source=localhost;Timeout=0</ConnectionString>
+  </Target>
+  <Options>
+    <TransactionalDeployment>false</TransactionalDeployment>
+    <PartitionDeployment>DeployPartitions</PartitionDeployment>
+    <RoleDeployment>DeployRolesRetainMembers</RoleDeployment>
+    <ProcessingOption>Default</ProcessingOption>
+    <OutputScript></OutputScript>
+    <ImpactAnalysisFile></ImpactAnalysisFile>
+    <ConfigurationSettingsDeployment>Deploy</ConfigurationSettingsDeployment>
+    <OptimizationSettingsDeployment>Deploy</OptimizationSettingsDeployment>
+    <WriteBackTableCreation>UseExisting</WriteBackTableCreation>
+  </Options>
+  <Snapshot>
+    <ObjectSnapshots>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.RelationalDataSource</Type>
+        <TimeStamp>zNl7TXFBb76G0iH8vM6p2nnXvUQ=11/1/2017 2:23:27 PM11/1/2017 2:23:27 PM</TimeStamp>
+        <ID>
+          <String>DW Agent Sales</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.DataSourceView</Type>
+        <TimeStamp>AmF26rK3GNQQIqM/yJNeAlojl48=11/1/2017 2:24:15 PM11/1/2017 2:24:13 PM</TimeStamp>
+        <ID>
+          <String>DW Agent Sales</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>qdH9Q7rf7u5rDb0REJYiJGxUPLM=11/1/2017 2:25:48 PM11/1/2017 2:25:48 PM</TimeStamp>
+        <ID>
+          <String>Dim Date</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>6dx3Rp5WrV+xnsIFKcum0NDy0xM=11/1/2017 2:25:48 PM11/1/2017 2:25:48 PM</TimeStamp>
+        <ID>
+          <String>Dim Listing</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>4shxsCA929GkteVGVfL0U7GaO58=11/1/2017 2:25:48 PM11/1/2017 2:25:48 PM</TimeStamp>
+        <ID>
+          <String>Dim Property</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>BrLUwwkHDWd52b/oI5C1OpiTCOY=11/1/2017 2:25:48 PM11/1/2017 2:25:48 PM</TimeStamp>
+        <ID>
+          <String>Dim Agent</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>Ze76uarmcjV1Tmanzc2mXwOEL5I=11/1/2017 2:53:15 PM11/1/2017 2:25:47 PM</TimeStamp>
+        <ID>
+          <String>Dim Customer</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Cube</Type>
+        <TimeStamp>t0tC+yVN3zmxRFSVdYzk0cvEwSM=11/1/2017 2:44:31 PM11/1/2017 2:25:47 PMrBel9vcRxXc0skl2y2Fj7EzQnb0=11/1/2017 2:25:48 PM11/1/2017 2:25:47 PM</TimeStamp>
+        <ID>
+          <String>Redwood Cube</String>
+        </ID>
+      </ObjectSnapshot>
+    </ObjectSnapshots>
+    <DatabaseSnapshot>
+      <Type>Microsoft.AnalysisServices.Database</Type>
+      <TimeStamp>i9+Mw7SPr9MV9RJ/+gT5uuRy1PI=11/1/2017 2:21:02 PM11/1/2017 2:21:02 PM</TimeStamp>
+      <ID>
+        <String>SSASPeerLearningGroup</String>
+      </ID>
+    </DatabaseSnapshot>
+    <Granularity>Coarse</Granularity>
+  </Snapshot>
+  <AssemblyLocations />
+  <ProcessingComplete>true</ProcessingComplete>
+  <LastDeployed>2017-11-01T20:53:16.513333Z</LastDeployed>
+</DeploymentSnapshot>
