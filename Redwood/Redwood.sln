@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionDocuments", "Soluti
 EndProject
 Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Redwood ETL", "Redwood ETL\Redwood ETL.dtproj", "{185ACC09-EB54-45FB-B67C-349A4A9E3973}"
 EndProject
+Project("{D2ABAB84-BF74-430A-B69E-9DC6D40DDA17}") = "SSASPeerLearningGroup", "SSASPeerLearningGroup\SSASPeerLearningGroup.dwproj", "{A7330F4E-8A5A-4CC9-9E92-CB13C5D4BACC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Development|Default = Development|Default
@@ -19,6 +21,9 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{185ACC09-EB54-45FB-B67C-349A4A9E3973}.Development|Default.ActiveCfg = Development
 		{185ACC09-EB54-45FB-B67C-349A4A9E3973}.Development|Default.Build.0 = Development
+		{A7330F4E-8A5A-4CC9-9E92-CB13C5D4BACC}.Development|Default.ActiveCfg = Development
+		{A7330F4E-8A5A-4CC9-9E92-CB13C5D4BACC}.Development|Default.Build.0 = Development
+		{A7330F4E-8A5A-4CC9-9E92-CB13C5D4BACC}.Development|Default.Deploy.0 = Development
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
