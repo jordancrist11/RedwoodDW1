@@ -19,56 +19,56 @@
     <ObjectSnapshots>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.RelationalDataSource</Type>
-        <TimeStamp>zNl7TXFBb76G0iH8vM6p2nnXvUQ=11/1/2017 2:23:27 PM11/1/2017 2:23:27 PM</TimeStamp>
+        <TimeStamp>H+KjLJJYtFH0AkLHXZRX3Bi9Hpc=11/6/2017 4:31:17 PM11/6/2017 4:10:50 PM</TimeStamp>
         <ID>
           <String>DW Agent Sales</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.DataSourceView</Type>
-        <TimeStamp>AmF26rK3GNQQIqM/yJNeAlojl48=11/1/2017 2:24:15 PM11/1/2017 2:24:13 PM</TimeStamp>
+        <TimeStamp>AmF26rK3GNQQIqM/yJNeAlojl48=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
         <ID>
           <String>DW Agent Sales</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>Ze76uarmcjV1Tmanzc2mXwOEL5I=11/1/2017 2:54:51 PM11/1/2017 2:25:47 PM</TimeStamp>
+        <TimeStamp>Ze76uarmcjV1Tmanzc2mXwOEL5I=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
         <ID>
           <String>Dim Customer</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>CMIiOgpDnlBOvXo4jDukWpXPJzo=11/6/2017 3:46:15 PM11/1/2017 2:25:48 PM</TimeStamp>
+        <TimeStamp>CMIiOgpDnlBOvXo4jDukWpXPJzo=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
         <ID>
           <String>Dim Date</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>FxL0icKrayZxvD1Rx4GBa/8x5lQ=11/6/2017 3:55:34 PM11/1/2017 2:25:48 PM</TimeStamp>
+        <TimeStamp>FxL0icKrayZxvD1Rx4GBa/8x5lQ=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
         <ID>
           <String>Dim Listing</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>5zS1MFt/kpP7av7wNVSqkSavnUQ=11/6/2017 4:08:12 PM11/1/2017 2:25:48 PM</TimeStamp>
+        <TimeStamp>5zS1MFt/kpP7av7wNVSqkSavnUQ=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
         <ID>
           <String>Dim Property</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>BrLUwwkHDWd52b/oI5C1OpiTCOY=11/1/2017 2:25:48 PM11/1/2017 2:25:48 PM</TimeStamp>
+        <TimeStamp>BrLUwwkHDWd52b/oI5C1OpiTCOY=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
         <ID>
           <String>Dim Agent</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Cube</Type>
-        <TimeStamp>kIM6PJpfgC+hZcbpMOOFh5ACbPs=11/6/2017 4:02:11 PM11/1/2017 2:25:47 PMrBel9vcRxXc0skl2y2Fj7EzQnb0=11/1/2017 2:25:48 PM11/1/2017 2:25:47 PM</TimeStamp>
+        <TimeStamp>kIM6PJpfgC+hZcbpMOOFh5ACbPs=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PMrBel9vcRxXc0skl2y2Fj7EzQnb0=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
         <ID>
           <String>Redwood Cube</String>
         </ID>
@@ -76,7 +76,7 @@
     </ObjectSnapshots>
     <DatabaseSnapshot>
       <Type>Microsoft.AnalysisServices.Database</Type>
-      <TimeStamp>lAfBGnhDLFoyPlDAnpF+ogswB+8=11/6/2017 3:42:03 PM11/1/2017 2:21:02 PM</TimeStamp>
+      <TimeStamp>lAfBGnhDLFoyPlDAnpF+ogswB+8=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
       <ID>
         <String>SSASPeerLearningGroup</String>
       </ID>
@@ -85,5 +85,5 @@
   </Snapshot>
   <AssemblyLocations />
   <ProcessingComplete>true</ProcessingComplete>
-  <LastDeployed>2017-11-06T23:08:24.3Z</LastDeployed>
+  <LastDeployed>2017-11-06T23:31:24.256667Z</LastDeployed>
 </DeploymentSnapshot>
