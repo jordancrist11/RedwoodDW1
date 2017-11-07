@@ -13,6 +13,9 @@
     </DataSources>
     <Dimensions>
       <Dimension>
+        <ID>Dim Agent</ID>
+      </Dimension>
+      <Dimension>
         <ID>Dim Customer</ID>
       </Dimension>
       <Dimension>
@@ -23,9 +26,6 @@
       </Dimension>
       <Dimension>
         <ID>Dim Property</ID>
-      </Dimension>
-      <Dimension>
-        <ID>Dim Agent</ID>
       </Dimension>
     </Dimensions>
     <Cubes>
