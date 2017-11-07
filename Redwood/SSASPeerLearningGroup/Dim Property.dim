@@ -8,9 +8,9 @@
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:DiagramLayout</Name>
       <Value>
         <dds xmlns="">
-          <diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="MSDDS.Rectilinear" defaultlineroute="MSDDS.Rectilinear" version="7" nextobject="3" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="-2914" scrolltop="-1553" gridx="150" gridy="150" marginx="5000" marginy="5000" zoom="100" x="7303" y="8837" backcolor="16777215" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="0" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}">
+          <diagram fontclsid="{0BE35203-8F91-11CE-9DE3-00AA004BB851}" mouseiconclsid="{0BE35204-8F91-11CE-9DE3-00AA004BB851}" defaultlayout="MSDDS.Rectilinear" defaultlineroute="MSDDS.Rectilinear" version="7" nextobject="3" scale="100" pagebreakanchorx="0" pagebreakanchory="0" pagebreaksizex="0" pagebreaksizey="0" scrollleft="-2914" scrolltop="-1553" gridx="150" gridy="150" marginx="5000" marginy="5000" zoom="100" x="9652" y="10562" backcolor="16777215" defaultpersistence="2" PrintPageNumbersMode="3" PrintMarginTop="0" PrintMarginBottom="635" PrintMarginLeft="0" PrintMarginRight="0" marqueeselectionmode="0" mousepointer="0" snaptogrid="0" autotypeannotation="1" showscrollbars="0" viewpagebreaks="0" donotforceconnectorsbehindshapes="1" backpictureclsid="{00000000-0000-0000-0000-000000000000}">
             <font>
-              <ddsxmlobjectstreamwrapper binary="01000000900144420100065461686f6d61" />
+              <ddsxmlobjectstreamwrapper binary="010000009001b0300100065461686f6d61" />
             </font>
             <mouseicon>
               <ddsxmlobjectstreamwrapper binary="6c74000000000000" />
@@ -68,7 +68,7 @@
     <Annotation>
       <Name>http://schemas.microsoft.com/DataWarehouse/Designer/1.0:ARDiagramLayout</Name>
       <Value>
-        <DiagramLayout ZoomPercent="100" ViewPortX="285" ViewPortY="0" xmlns="">
+        <DiagramLayout ZoomPercent="100" ViewPortX="463" ViewPortY="0" xmlns="">
           <Shapes NodeWidth="140">
             <Shape Id="Property SK" Expanded="false">
               <Attributes>
@@ -176,6 +176,7 @@
         </AttributeRelationship>
         <AttributeRelationship dwd:design-time-name="4c1fb816-6897-45d0-a93a-3f1cfe984eec">
           <AttributeID>Zone</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>Zone</Name>
         </AttributeRelationship>
       </AttributeRelationships>
@@ -229,6 +230,7 @@
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="33dfde33-3874-4a07-9a92-74b67cc0c39e">
           <AttributeID>City</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>City</Name>
         </AttributeRelationship>
       </AttributeRelationships>
@@ -266,6 +268,7 @@
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="982cba7c-5a3c-46be-9b94-8ec7ee4947a6">
           <AttributeID>Zipcode</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>Zipcode</Name>
         </AttributeRelationship>
       </AttributeRelationships>
@@ -319,6 +322,7 @@
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="ec820d41-e627-43f3-a543-5fe5952292b0">
           <AttributeID>State</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>State</Name>
         </AttributeRelationship>
       </AttributeRelationships>
@@ -354,6 +358,7 @@
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="7f00e929-faef-45f2-841a-f6c31647ad77">
           <AttributeID>Address</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>Address</Name>
         </AttributeRelationship>
       </AttributeRelationships>
@@ -389,6 +394,7 @@
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="6a572f94-42d3-4ff4-861a-e3f6ed79102d">
           <AttributeID>Bedrooms</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>Bedrooms</Name>
         </AttributeRelationship>
       </AttributeRelationships>
@@ -424,6 +430,7 @@
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="fc49cf01-6cff-4143-8f31-8acd0e085841">
           <AttributeID>Bathrooms</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>Bathrooms</Name>
         </AttributeRelationship>
       </AttributeRelationships>
@@ -459,6 +466,7 @@
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="2760ef69-5b0f-464b-afc2-434cb9af31fb">
           <AttributeID>Stories</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>Stories</Name>
         </AttributeRelationship>
       </AttributeRelationships>
@@ -494,6 +502,7 @@
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="1f706aa7-0a78-4876-9f92-e2b287328cda">
           <AttributeID>Sq Ft</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>Sq Ft</Name>
         </AttributeRelationship>
       </AttributeRelationships>
@@ -531,6 +540,7 @@
       <AttributeRelationships>
         <AttributeRelationship dwd:design-time-name="5901b3c4-6c7b-40ad-8f1e-c9451556e92e">
           <AttributeID>Year Built</AttributeID>
+          <RelationshipType>Rigid</RelationshipType>
           <Name>Year Built</Name>
         </AttributeRelationship>
       </AttributeRelationships>

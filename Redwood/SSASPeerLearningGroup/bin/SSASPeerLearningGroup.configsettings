@@ -6,7 +6,7 @@
         <ConnectionString>Provider=SQLNCLI11.1;Data Source=.;Integrated Security=SSPI;Initial Catalog=DWAgentSales</ConnectionString>
         <ImpersonationInfo>
           <ImpersonationMode xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">ImpersonateAccount</ImpersonationMode>
-          <Account xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">JORDANS-PC\Jordan</Account>
+          <Account xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">DAVIDBRAY\lucky_000</Account>
           <ImpersonationInfoSecurity xmlns="http://schemas.microsoft.com/analysisservices/2003/engine">PasswordRemoved</ImpersonationInfoSecurity>
         </ImpersonationInfo>
       </DataSource>
@@ -16,16 +16,16 @@
         <ID>Dim Customer</ID>
       </Dimension>
       <Dimension>
-        <ID>Dim Date</ID>
-      </Dimension>
-      <Dimension>
         <ID>Dim Listing</ID>
       </Dimension>
       <Dimension>
-        <ID>Dim Property</ID>
+        <ID>Dim Agent</ID>
       </Dimension>
       <Dimension>
-        <ID>Dim Agent</ID>
+        <ID>Dim Date</ID>
+      </Dimension>
+      <Dimension>
+        <ID>Dim Property</ID>
       </Dimension>
     </Dimensions>
     <Cubes>

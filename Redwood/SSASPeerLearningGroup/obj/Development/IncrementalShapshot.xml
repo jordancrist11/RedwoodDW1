@@ -19,56 +19,56 @@
     <ObjectSnapshots>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.RelationalDataSource</Type>
-        <TimeStamp>H+KjLJJYtFH0AkLHXZRX3Bi9Hpc=11/6/2017 7:41:24 PM11/6/2017 4:10:50 PM</TimeStamp>
+        <TimeStamp>A3VJezXTNz211Nvj1wBTU2xFuas=11/7/2017 8:07:27 AM11/1/2017 2:23:27 PM</TimeStamp>
         <ID>
           <String>DW Agent Sales</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.DataSourceView</Type>
-        <TimeStamp>AmF26rK3GNQQIqM/yJNeAlojl48=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
+        <TimeStamp>AmF26rK3GNQQIqM/yJNeAlojl48=11/1/2017 2:24:15 PM11/1/2017 2:24:13 PM</TimeStamp>
         <ID>
           <String>DW Agent Sales</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>Ze76uarmcjV1Tmanzc2mXwOEL5I=11/6/2017 7:49:51 PM11/6/2017 4:10:50 PM</TimeStamp>
+        <TimeStamp>Ze76uarmcjV1Tmanzc2mXwOEL5I=11/1/2017 2:54:51 PM11/1/2017 2:25:47 PM</TimeStamp>
         <ID>
           <String>Dim Customer</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>D6139M9sSXKcWC3k6bOAdnNYRrU=11/7/2017 6:57:52 AM11/6/2017 4:10:50 PM</TimeStamp>
-        <ID>
-          <String>Dim Date</String>
-        </ID>
-      </ObjectSnapshot>
-      <ObjectSnapshot>
-        <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>FxL0icKrayZxvD1Rx4GBa/8x5lQ=11/6/2017 7:49:51 PM11/6/2017 4:10:50 PM</TimeStamp>
+        <TimeStamp>FxL0icKrayZxvD1Rx4GBa/8x5lQ=11/6/2017 3:55:34 PM11/1/2017 2:25:48 PM</TimeStamp>
         <ID>
           <String>Dim Listing</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>w6zN0C3OvB7FOSYq71QI7DQnDl0=11/7/2017 7:49:32 AM11/6/2017 4:10:50 PM</TimeStamp>
-        <ID>
-          <String>Dim Property</String>
-        </ID>
-      </ObjectSnapshot>
-      <ObjectSnapshot>
-        <Type>Microsoft.AnalysisServices.Dimension</Type>
-        <TimeStamp>BrLUwwkHDWd52b/oI5C1OpiTCOY=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
+        <TimeStamp>BrLUwwkHDWd52b/oI5C1OpiTCOY=11/1/2017 2:25:48 PM11/1/2017 2:25:48 PM</TimeStamp>
         <ID>
           <String>Dim Agent</String>
         </ID>
       </ObjectSnapshot>
       <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>1bH/TIRpEXMgH0VAHna+nbxRZM8=11/7/2017 8:33:29 AM11/1/2017 2:25:48 PM</TimeStamp>
+        <ID>
+          <String>Dim Date</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
+        <Type>Microsoft.AnalysisServices.Dimension</Type>
+        <TimeStamp>oO3ttqKc6Uy1cq8lS51sgX9Ksdo=11/7/2017 9:15:42 AM11/1/2017 2:25:48 PM</TimeStamp>
+        <ID>
+          <String>Dim Property</String>
+        </ID>
+      </ObjectSnapshot>
+      <ObjectSnapshot>
         <Type>Microsoft.AnalysisServices.Cube</Type>
-        <TimeStamp>eKW6GI+mFjHQ3sQQRZ4ltQekghg=11/7/2017 7:38:18 AM11/6/2017 4:10:50 PMrBel9vcRxXc0skl2y2Fj7EzQnb0=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
+        <TimeStamp>S40KSTZRiy3kO/7KJ9/oQugS2tU=11/7/2017 9:04:19 AM11/1/2017 2:25:47 PMrBel9vcRxXc0skl2y2Fj7EzQnb0=11/1/2017 2:25:48 PM11/1/2017 2:25:47 PM</TimeStamp>
         <ID>
           <String>Redwood Cube</String>
         </ID>
@@ -76,7 +76,7 @@
     </ObjectSnapshots>
     <DatabaseSnapshot>
       <Type>Microsoft.AnalysisServices.Database</Type>
-      <TimeStamp>lAfBGnhDLFoyPlDAnpF+ogswB+8=11/6/2017 4:10:50 PM11/6/2017 4:10:50 PM</TimeStamp>
+      <TimeStamp>lAfBGnhDLFoyPlDAnpF+ogswB+8=11/6/2017 3:42:03 PM11/1/2017 2:21:02 PM</TimeStamp>
       <ID>
         <String>SSASPeerLearningGroup</String>
       </ID>
@@ -85,5 +85,5 @@
   </Snapshot>
   <AssemblyLocations />
   <ProcessingComplete>true</ProcessingComplete>
-  <LastDeployed>2017-11-07T14:49:35.273333Z</LastDeployed>
+  <LastDeployed>2017-11-07T16:15:48.51Z</LastDeployed>
 </DeploymentSnapshot>
